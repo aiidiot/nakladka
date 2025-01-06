@@ -1,7 +1,12 @@
 // Zmienne globalne
-let isDraggingOverlay = false;
-let overlayStartX, overlayStartY;
-let mainImageOffset = { x: 0, y: 0 };
+let isDragging = false;
+let isResizing = false;
+let currentX;
+let currentY;
+let initialX;
+let initialY;
+let xOffset = 50;
+let yOffset = 50;
 let mainImageScale = 1;
 let overlayImageScale = 1;
 
@@ -9,222 +14,9 @@ let overlayImageScale = 1;
 const overlayContainer = document.getElementById('overlayContainer');
 const mainImage = document.getElementById('mainImage');
 const overlayImage = document.getElementById('overlayImage');
-const editorContainer = document.getElementById('editorContainer');
-
-// Obsługa przycisków kolorów
-document.querySelectorAll('.color-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const color = this.dataset.color;
-        overlayContainer.style.borderColor = color;
-        document.getElementById('borderColor').value = color;
-    });
-});
-
-// Obsługa przeciągania nakładki
-overlayContainer.addEventListener('mousedown', function(e) {
-    isDraggingOverlay = true;
-    overlayStartX = e.clientX - overlayContainer.offsetLeft;
-    overlayStartY = e.clientY - overlayContainer.offsetTop;
-});
-
-document.addEventListener('mousemove', function(e) {
-    if (isDraggingOverlay) {
-        let newX = e.clientX - overlayStartX;
-        let newY = e.clientY - overlayStartY;
-        
-        const maxX = editorContainer.offsetWidth - overlayContainer.offsetWidth;
-        const maxY = editorContainer.offsetHeight - overlayContainer.offsetHeight;
-        
-        newX = Math.max(0, Math.min(newX, maxX));
-        newY = Math.max(0, Math.min(newY, maxY));
-
-        overlayContainer.style.left = newX + 'px';
-        overlayContainer.style.top = newY + 'px';
-    }
-});
-
-document.addEventListener('mouseup', function() {
-    isDraggingOverlay = false;
-});
-
-// Obsługa strzałek dla głównego zdjęcia
-const MOVE_STEP = 20;
-document.querySelectorAll('#mainImageNav .arrow').forEach(arrow => {
-    arrow.addEventListener('click', function() {
-        const direction = this.classList[1];
-        switch(direction) {
-            case 'up': mainImageOffset.y += MOVE_STEP; break;
-            case 'down': mainImageOffset.y -= MOVE_STEP; break;
-            case 'left': mainImageOffset.x += MOVE_STEP; break;
-            case 'right': mainImageOffset.x -= MOVE_STEP; break;
-        }
-        updateMainImagePosition();
-    });
-});
-
-// Obsługa strzałek dla nakładki
-document.querySelectorAll('#overlayImageNav .arrow').forEach(arrow => {
-    arrow.addEventListener('click', function() {
-        const overlayImage = document.getElementById('overlayImage');
-        const direction = this.classList[1];
-        const transform = window.getComputedStyle(overlayImage).transform;
-        const matrix = new DOMMatrix(transform);
-        const step = 20;
-        
-        let x = matrix.m41 || 0;
-        let y = matrix.m42 || 0;
-        
-        switch(direction) {
-            case 'up': y -= step; break;
-            case 'down': y += step; break;
-            case 'left': x -= step; break;
-            case 'right': x += step; break;
-        }
-        
-        overlayImage.style.transform = `translate(${x}px, ${y}px) scale(${overlayImageScale})`;
-    });
-});
-
-function updateMainImagePosition() {
-    mainImage.style.transform = `translate(calc(-50% + ${mainImageOffset.x}px), calc(-50% + ${mainImageOffset.y}px)) scale(${mainImageScale})`;
-}
-
-// Obsługa skalowania
-document.getElementById('mainImageScale').addEventListener('input', function(e) {
-    mainImageScale = e.target.value / 100;
-    this.nextElementSibling.textContent = e.target.value + '%';
-    updateMainImagePosition();
-});
-
-document.getElementById('overlayImageScale').addEventListener('input', function(e) {
-    overlayImageScale = e.target.value / 100;
-    this.nextElementSibling.textContent = e.target.value + '%';
-    overlayImage.style.transform = `scale(${overlayImageScale})`;
-});
-
-// Obsługa wielkości nakładki
-function updateOverlaySize(value) {
-    document.getElementById('overlaySize').value = value;
-    document.getElementById('overlaySizeInput').value = value;
-    overlayContainer.style.width = value + 'px';
-    overlayContainer.style.height = value + 'px';
-}
-
-document.getElementById('overlaySize').addEventListener('input', e => updateOverlaySize(e.target.value));
-document.getElementById('overlaySizeInput').addEventListener('input', e => updateOverlaySize(e.target.value));
-
-// Obsługa cienia
-document.getElementById('shadowToggle').addEventListener('change', function(e) {
-    if (this.checked) {
-        overlayContainer.classList.add('shadow');
-    } else {
-        overlayContainer.classList.remove('shadow');
-    }
-});
-
-// Funkcja do renderowania z cieniem
-async function renderWithShadow() {
-    // Tworzymy tymczasowy canvas o rozmiarach edytora
-    const tempCanvas = document.createElement('canvas');
-    const ctx = tempCanvas.getContext('2d');
-    tempCanvas.width = editorContainer.offsetWidth;
-    tempCanvas.height = editorContainer.offsetHeight;
-
-    // Rysujemy główne zdjęcie
-    await html2canvas(document.getElementById('mainImageContainer'), {
-        canvas: tempCanvas,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: null
-    });
-
-    // Jeśli włączony jest cień, rysujemy go
-    if (document.getElementById('shadowToggle').checked) {
-        ctx.save();
-        ctx.shadowColor = 'rgba(0, 0, 0, 2.6)';
-        ctx.shadowBlur = 16;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 8;
-
-        // Pozycja nakładki
-        const overlayRect = overlayContainer.getBoundingClientRect();
-        const editorRect = editorContainer.getBoundingClientRect();
-        const x = overlayRect.left - editorRect.left;
-        const y = overlayRect.top - editorRect.top;
-
-        // Rysujemy kształt cienia
-        if (overlayContainer.classList.contains('circle')) {
-            ctx.beginPath();
-            ctx.arc(
-                x + overlayRect.width/2,
-                y + overlayRect.height/2,
-                overlayRect.width/2,
-                0,
-                Math.PI * 2
-            );
-            ctx.fill();
-        } else {
-            ctx.fillRect(x, y, overlayRect.width, overlayRect.height);
-        }
-        ctx.restore();
-    }
-
-    // Rysujemy nakładkę
-    await html2canvas(overlayContainer, {
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: null
-    }).then(overlayCanvas => {
-        const overlayRect = overlayContainer.getBoundingClientRect();
-        const editorRect = editorContainer.getBoundingClientRect();
-        ctx.drawImage(
-            overlayCanvas,
-            overlayRect.left - editorRect.left,
-            overlayRect.top - editorRect.top
-        );
-    });
-
-    return tempCanvas;
-}
-
-// Obsługa zapisu
-document.getElementById('saveAsBtn').addEventListener('click', async function() {
-    const canvas = await generateFinalCanvas();
-    
-    // Pobranie nazwy pliku
-    const mainImageName = document.getElementById('mainImageInput').files[0]?.name || 'image';
-    const baseName = mainImageName.replace(/\.[^/.]+$/, "");
-    let lastNumber = parseInt(localStorage.getItem('lastFileNumber') || '0');
-    lastNumber++;
-    localStorage.setItem('lastFileNumber', lastNumber);
-    const fileName = `${baseName}_${String(lastNumber).padStart(3, '0')}.jpg`;
-
-    // Zapis pliku
-    canvas.toBlob(blob => {
-        saveAs(blob, fileName);
-    }, 'image/jpeg', 0.95);
-});
-
-
-/// Obsługa kopiowania do schowka
-document.getElementById('copyToClipboardBtn').addEventListener('click', async function() {
-    try {
-        const canvas = await generateFinalCanvas();
-        canvas.toBlob(async blob => {
-            try {
-                const item = new ClipboardItem({ 'image/png': blob });
-                await navigator.clipboard.write([item]);
-                alert('Skopiowano do schowka!');
-            } catch(e) {
-                console.error('Błąd kopiowania:', e);
-                alert('Nie udało się skopiować do schowka. Spróbuj zapisać plik.');
-            }
-        }, 'image/png');
-    } catch(e) {
-        console.error('Błąd generowania obrazu:', e);
-        alert('Wystąpił błąd podczas generowania obrazu.');
-    }
-});
+const shadowSvg = overlayContainer.querySelector('.shadow-svg');
+const shadowCircle = shadowSvg.querySelector('circle');
+const shadowRect = shadowSvg.querySelector('rect');
 
 // Obsługa wczytywania zdjęć
 function handleImageUpload(input, imgElement) {
@@ -234,3 +26,88 @@ function handleImageUpload(input, imgElement) {
             const reader = new FileReader();
             reader.onload = function(e) {
                 imgElement.src = e.target.result;
+                imgElement.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+}
+
+handleImageUpload(document.getElementById('mainImageInput'), mainImage);
+handleImageUpload(document.getElementById('overlayImageInput'), overlayImage);
+
+// Obsługa przeciągania nakładki
+overlayContainer.addEventListener('mousedown', function(e) {
+    if (e.target === overlayContainer || e.target === overlayImage) {
+        isDragging = true;
+        initialX = e.clientX - xOffset;
+        initialY = e.clientY - yOffset;
+    }
+});
+
+document.addEventListener('mousemove', function(e) {
+    if (isDragging) {
+        e.preventDefault();
+        currentX = e.clientX - initialX;
+        currentY = e.clientY - initialY;
+        
+        const maxX = editorContainer.offsetWidth - overlayContainer.offsetWidth;
+        const maxY = editorContainer.offsetHeight - overlayContainer.offsetHeight;
+        
+        xOffset = Math.min(Math.max(0, currentX), maxX);
+        yOffset = Math.min(Math.max(0, currentY), maxY);
+        
+        overlayContainer.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+    }
+});
+
+document.addEventListener('mouseup', function() {
+    isDragging = false;
+});
+
+// Obsługa cienia
+document.getElementById('shadowToggle').addEventListener('change', function(e) {
+    shadowSvg.style.display = e.target.checked ? 'block' : 'none';
+    if (overlayContainer.classList.contains('circle')) {
+        shadowCircle.style.display = 'block';
+        shadowRect.style.display = 'none';
+    } else {
+        shadowCircle.style.display = 'none';
+        shadowRect.style.display = 'block';
+    }
+});
+
+// Obsługa kształtów
+document.querySelectorAll('[data-shape]').forEach(button => {
+    button.addEventListener('click', function() {
+        document.querySelectorAll('[data-shape]').forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        overlayContainer.className = this.dataset.shape;
+        
+        // Aktualizacja kształtu cienia
+        if (document.getElementById('shadowToggle').checked) {
+            if (this.dataset.shape === 'circle') {
+                shadowCircle.style.display = 'block';
+                shadowRect.style.display = 'none';
+            } else {
+                shadowCircle.style.display = 'none';
+                shadowRect.style.display = 'block';
+            }
+        }
+    });
+});
+
+// Obsługa kolorów
+document.querySelectorAll('.color-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const color = this.dataset.color;
+        overlayContainer.style.borderColor = color;
+        document.getElementById('borderColor').value = color;
+    });
+});
+
+document.getElementById('borderColor').addEventListener('input', function(e) {
+    overlayContainer.style.borderColor = e.target.value;
+});
+
+// Obsługa grubości ramki
