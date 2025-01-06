@@ -5,14 +5,9 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
    <title>Edytor zdjęć</title>  
    <link rel="stylesheet" href="style.css">  
-   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>  
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>  
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>  
 </head>  
 <body>  
-   <div style="text-align: right; font-size: 12px; color: #666; margin-top: 10px; font-family: Arial, sans-serif;">SklejkaMaker by Robert</div>
-
-   <p style="background-image: url('https://img.freepik.com/free-vector/abstract-geometric-wireframe-background_52683-59421.jpg');">  
    <div class="controls">  
       <div class="control-group">  
         <button class="btn active" data-shape="circle">Koło</button>  
@@ -84,7 +79,7 @@
       </div>  
       <div id="shadow"></div>  
       <div id="overlayContainer" class="circle">  
-       <img id="overlayImage" alt="Nakładka" style="aspect-ratio: 1/1;"> 
+        <img id="overlayImage" alt="Nakładka" style="aspect-ratio: 1/1;">  
         <div class="resize-handle"></div>  
       </div>  
    </div>  
@@ -107,11 +102,12 @@
    </div>  
   
    <div class="save-options">  
-      <button id="saveAsBtn" class="btn">Zapisz jako...</button>  
-      <button id="copyToClipboardBtn" class="btn">Skopiuj do schowka</button>  
-
+      <button id="saveAsBtn" class="btn">Zapisz (plik się pobierze)...</button>  
+      <button id="copyToClipboardBtn" class="btn">Skopiuj do schowka</button>
    </div>  
-  
+
+   <div style="text-align: right; font-size: 12px; color: #666; margin-top: 10px; font-family: Arial, sans-serif;">SklejkaMaker by Robert</div>
+   
    <script src="script.js"></script>  
 </body>  
 </html>
