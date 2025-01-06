@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edytor zdjęć</title>
     <link rel="stylesheet" href="style.css">
-	<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 </head>
 <body>
     <div class="controls">
@@ -83,24 +82,16 @@
         <span>100%</span>
     </div>
 
-<div id="editorContainer">
-    <div id="mainImageContainer">
-        <div class="placeholder" id="mainImagePlaceholder">
-            <div class="plus">+</div>
-            <div class="placeholder-text">Dodaj zdjęcie</div>
+    <div id="editorContainer">
+        <div id="mainImageContainer">
+            <img id="mainImage" alt="Główne zdjęcie">
         </div>
-        <img id="mainImage" alt="Główne zdjęcie" style="display: none;">
-    </div>
 
-    <div id="overlayContainer" class="circle">
-        <div class="placeholder" id="overlayImagePlaceholder">
-            <div class="plus">+</div>
-            <div class="placeholder-text">Dodaj nakładkę</div>
+        <div id="overlayContainer" class="circle">
+            <img id="overlayImage" alt="Nakładka">
+            <div class="resize-handle"></div>
         </div>
-        <img id="overlayImage" alt="Nakładka" style="display: none;">
-        <div class="resize-handle"></div>
     </div>
-</div>
 
     <div class="control-group">
         <label>Zdjęcie główne:</label>
@@ -113,15 +104,10 @@
         <input type="file" id="overlayImageInput" accept="image/*">
     </div>
 
-    <div class="control-group">
-        <label>Zapisz plik:</label>
-        <input type="text" id="fileNameInput" placeholder="Nazwa pliku" value="obraz">
-        <span id="fileNumber">_001</span>
-        <button id="saveAsBtn" class="btn" style="background: #28a745; color: white;">Zapisz jako...</button>
+    <div class="save-options">
+        <button id="saveAsBtn" class="btn">Zapisz jako...</button>
+        <button id="copyToClipboardBtn" class="btn">Skopiuj do schowka</button>
     </div>
-	<button id="copyToClipboardBtn" class="btn">Skopiuj do schowka</button>
- 
-
 
     <script src="script.js"></script>
 </body>
