@@ -115,17 +115,19 @@ body {
    cursor: move;  
    z-index: 10;  
    overflow: hidden;  
-}  
+}   
   
 .circle {  
    border-radius: 50%;  
 }  
   
-#overlayImage {  
-   width: 100%;  
-   height: 100%;  
-   object-fit: cover;  
-}  
+#overlayImage {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Dostosuj proporcje */
+    border-radius: 50%; /* Zachowaj kształt okręgu */
+    aspect-ratio: 1 / 1; /* Zapewnij proporcje */
+}
   
 .nav-arrows {  
    position: relative;  
