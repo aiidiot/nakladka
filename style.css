@@ -83,7 +83,8 @@ body {
    height: 100%;  
    position: relative;  
    overflow: hidden;  
-   z-index: 1;  
+   z-index: 1; /* Ustawienie z-index na wartość niższą niż #shadow */  
+
 }  
   
 #mainImage {  
@@ -95,16 +96,6 @@ body {
    transform: translate(-50%, -50%);  
 }  
   
-#shadow {  
-   position: absolute;  
-   background: rgba(0, 0, 0, 0.55);  
-   border-radius: 50%;  
-   display: none;  
-   z-index: 5;  
-   transform: translate(3px, 3px);  
-}
- 
-  
 #overlayContainer {  
    position: absolute;  
    top: 50px;  
@@ -114,20 +105,20 @@ body {
    border: 7px solid white;  
    cursor: move;  
    z-index: 10;  
-   overflow: hidden;  
-}   
+   overflow: hidden; 
+   z-index: 10;  
+   
+}  
   
 .circle {  
    border-radius: 50%;  
 }  
   
-#overlayImage {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* Dostosuj proporcje */
-    border-radius: 50%; /* Zachowaj kształt okręgu */
-    aspect-ratio: 1 / 1; /* Zapewnij proporcje */
-}
+#overlayImage {  
+   width: 100%;  
+   height: 100%;  
+   object-fit: cover;  
+}  
   
 .nav-arrows {  
    position: relative;  
@@ -194,4 +185,17 @@ input[type="range"] {
 input[type="number"] {  
    width: 70px;  
    padding: 5px;  
-}
+}  
+  
+#shadow {  
+   position: absolute;  
+   top: -23px;  
+   left: -23px;  
+   width: calc(100% + 16px);  
+   height: calc(100% + 16px);  
+   background: rgba(0, 0, 0, 0.7);  
+   border-radius: 50%;  
+   display: none;  
+   z-index: 5; /* Ustawienie z-index na wartość wyższą niż #mainImageContainer */  
+   transform: translate(3px, 3px);  
+}  
