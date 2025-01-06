@@ -141,7 +141,7 @@ async function renderWithShadow() {
     // Jeśli włączony jest cień, rysujemy go
     if (document.getElementById('shadowToggle').checked) {
         ctx.save();
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+        ctx.shadowColor = 'rgba(0, 0, 0, 2.6)';
         ctx.shadowBlur = 16;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 8;
