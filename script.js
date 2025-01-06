@@ -142,6 +142,7 @@ handleImageUpload(
     document.getElementById('overlayImage'),
     document.getElementById('overlayImagePlaceholder')
 );
+
 // Obsługa cienia
 document.getElementById('shadowToggle').addEventListener('change', function(e) {
     if (this.checked) {
@@ -150,83 +151,57 @@ document.getElementById('shadowToggle').addEventListener('change', function(e) {
         overlayContainer.classList.remove('shadow');
     }
 });
-// Autodopasowanie zdjęcia
-document.getElementById('autoFitBtn').addEventListener('click', function() {
-    mainImageOffset = { x: 0, y: 0 };
-    mainImageScale = 1;
-    document.getElementById('mainImageScale').value = 100;
-    mainImage.style.width = '100%';
-    mainImage.style.height = '100%';
-    mainImage.style.objectFit = 'contain';
-    updateMainImagePosition();
-});
-// A w JavaScript dodaj:
-document.getElementById('saveAsBtn').addEventListener('click', function() {
-    html2canvas(document.getElementById('editorContainer')).then(canvas => {
-        // Próba 1: Standardowy download
-        const link = document.createElement('a');
-        link.download = 'edytowane_zdjecie.jpg';
-        link.href = canvas.toDataURL('image/jpeg', 0.95);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
 
-        // Próba 2: Wymuszone okno "Zapisz jako"
-        try {
-            canvas.toBlob(function(blob) {
-                const file = new File([blob], 'edytowane_zdjecie.jpg', {type: 'image/jpeg'});
-                const saveAs = window.saveAs || (function(blob, name) {
-                    const a = document.createElement('a');
-                    a.download = name;
-                    a.rel = 'noopener';
-                    a.href = URL.createObjectURL(blob);
-                    setTimeout(function() { URL.revokeObjectURL(a.href); }, 40); // Clean up
-                    setTimeout(function() { a.click(); }, 0);
-                });
-                saveAs(file, 'edytowane_zdjecie.jpg');
-            }, 'image/jpeg', 0.95);
-        } catch(e) {
-            console.log('Próba 2 nie zadziałała:', e);
-        }
-    });
-});
+// Obsługa zapisu
 document.getElementById('saveAsBtn').addEventListener('click', async function() {
-    try {
-        const canvas = await html2canvas(document.getElementById('editorContainer'));
-        canvas.toBlob(async function(blob) {
-            try {
-                // Próba kopiowania do schowka
-                const item = new ClipboardItem({ "image/png": blob });
-                await navigator.clipboard.write([item]);
-                alert('Obraz skopiowany do schowka! Możesz go wkleić w Paincie lub innym programie graficznym.');
-            } catch(e) {
-                console.log('Nie udało się skopiować do schowka:', e);
-                // Fallback do zwykłego pobierania
-                const link = document.createElement('a');
-                link.download = 'edytowane_zdjecie.jpg';
-                link.href = URL.createObjectURL(blob);
-                link.click();
+    const canvas = await html2canvas(document.getElementById('editorContainer'), {
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: null,
+        onrendered: function(canvas) {
+            // Dodajemy cień jeśli jest włączony
+            if (document.getElementById('shadowToggle').checked) {
+                const ctx = canvas.getContext('2d');
+                const overlayRect = overlayContainer.getBoundingClientRect();
+                const editorRect = editorContainer.getBoundingClientRect();
+                
+                ctx.save();
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+                ctx.shadowBlur = 16;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 8;
+                
+                if (overlayContainer.classList.contains('circle')) {
+                    ctx.beginPath();
+                    ctx.arc(
+                        overlayRect.left - editorRect.left + overlayRect.width/2,
+                        overlayRect.top - editorRect.top + overlayRect.height/2,
+                        overlayRect.width/2,
+                        0,
+                        Math.PI * 2
+                    );
+                    ctx.fill();
+                }
+                ctx.restore();
             }
-        }, 'image/png');
-    } catch(e) {
-        console.error('Błąd podczas tworzenia obrazu:', e);
-    }
-});
-document.getElementById('copyToClipboardBtn').addEventListener('click', async function() {
-    const canvas = await html2canvas(document.getElementById('editorContainer'));
-    canvas.toBlob(async blob => {
-        try {
-            const item = new ClipboardItem({ "image/png": blob });
-            await navigator.clipboard.write([item]);
-            alert('Skopiowano do schowka! Możesz teraz wkleić obraz w dowolnym programie graficznym.');
-        } catch(e) {
-            alert('Nie udało się skopiować do schowka. Spróbuj użyć przycisku "Zapisz jako..."');
         }
     });
-});
-document.getElementById('saveAsBtn').addEventListener('click', async function() {
-    const canvas = await html2canvas(document.getElementById('editorContainer'));
+
+    // Pobranie nazwy pliku głównego zdjęcia
+    const mainImageName = document.getElementById('mainImageInput').files[0]?.name || 'image';
+    const baseName = mainImageName.replace(/\.[^/.]+$/, "");
+    
+    // Pobranie ostatniego numeru
+    let lastNumber = parseInt(localStorage.getItem('lastFileNumber') || '0');
+    lastNumber++;
+    localStorage.setItem('lastFileNumber', lastNumber);
+    
+    // Utworzenie nazwy pliku
+    const paddedNumber = String(lastNumber).padStart(3, '0');
+    const fileName = `${baseName}_${paddedNumber}.jpg`;
+
+    // Konwersja canvas do Blob i zapis
     canvas.toBlob(function(blob) {
-        saveAs(blob, 'edytowane_zdjecie.jpg');
-    });
+        saveAs(blob, fileName);
+    }, 'image/jpeg', 0.95);
 });
