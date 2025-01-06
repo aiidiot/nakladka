@@ -106,7 +106,24 @@
       <button id="copyToClipboardBtn" class="btn">Skopiuj do schowka</button>
    </div>  
 
-   <div style="text-align: right; font-size: 12px; color: #666; margin-top: 10px; font-family: Arial, sans-serif;">SklejkaMaker by Robert</div>
+   <div style="text-align: right; font-size: 12px; color: #666; margin-top: 10px; font-family: Arial, sans-serif;">SklejkaMaker by Robert VER 1.3</div>
+   
+<div class="control-group">
+    <label>Szablony:</label>
+    <select id="templateSelect" style="padding: 5px; min-width: 200px;">
+        <option value="default">Domyślny</option>
+    </select>
+    <button id="loadTemplateBtn" class="btn">Wczytaj</button>
+    <button id="deleteTemplateBtn" class="btn">Usuń wybrany szablon</button>
+</div>
+
+<div class="control-group">
+    <label>Nazwa nowego szablonu:</label>
+    <input type="text" id="newTemplateName" placeholder="Wpisz nazwę szablonu" style="padding: 5px; min-width: 200px;">
+    <button id="saveTemplateBtn" class="btn">Zapisz jako szablon</button>
+</div>
+   
+   
    
    <script src="script.js"></script>  
 </body>  
