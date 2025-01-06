@@ -48,16 +48,16 @@ document.addEventListener('mouseup', function() {
    isDraggingOverlay = false;  
 });  
   
-// Obsługa strzałek dla głównego zdjęcia  
+// Obsługa strzałek dla głównego zdjęcia z poprawionymi kierunkami
 const MOVE_STEP = 20;  
 document.querySelectorAll('#mainImageNav .arrow').forEach(arrow => {  
    arrow.addEventListener('click', function() {  
       const direction = this.classList[1];  
       switch(direction) {  
-        case 'up': mainImageOffset.y += MOVE_STEP; break;  
-        case 'down': mainImageOffset.y -= MOVE_STEP; break;  
-        case 'left': mainImageOffset.x += MOVE_STEP; break;  
-        case 'right': mainImageOffset.x -= MOVE_STEP; break;  
+        case 'up': mainImageOffset.y -= MOVE_STEP; break;  
+        case 'down': mainImageOffset.y += MOVE_STEP; break;  
+        case 'left': mainImageOffset.x -= MOVE_STEP; break;  
+        case 'right': mainImageOffset.x += MOVE_STEP; break;  
       }  
       updateMainImagePosition();  
    });  
@@ -76,15 +76,15 @@ document.querySelectorAll('#overlayImageNav .arrow').forEach(arrow => {
       let y = matrix.m42 || 0;  
        
       switch(direction) {  
-        case 'up': y -= step; break;  
-        case 'down': y += step; break;  
+        case 'up': y -= step; break;       // Zostawione jak jest
+        case 'down': y += step; break;     // Zostawione jak jest
         case 'left': x -= step; break;  
         case 'right': x += step; break;  
       }  
        
       overlayImage.style.transform = `translate(${x}px, ${y}px) scale(${overlayImageScale})`;  
    });  
-});  
+});
   
 function updateMainImagePosition() {  
    mainImage.style.transform = `translate(calc(-50% + ${mainImageOffset.x}px), calc(-50% + ${mainImageOffset.y}px)) scale(${mainImageScale})`;  
@@ -138,25 +138,28 @@ document.getElementById('shadowToggle').addEventListener('change', function(e) {
    }  
 });  
   
-// Funkcja aktualizacji cienia  
+// Nowa funkcja aktualizacji cienia z efektem rozmycia
 function updateShadow() {  
    const overlay = document.getElementById('overlayContainer');  
    const shadow = document.getElementById('shadow');  
    const borderWidth = parseInt(getComputedStyle(overlay).borderWidth);  
     
-   // Ustawienie rozmiaru cienia (większy o grubość ramki)  
-   shadow.style.width = (overlay.offsetWidth + borderWidth * 1) + 'px';  
-   shadow.style.height = (overlay.offsetHeight + borderWidth * 1) + 'px';  
-    
-   // Pozycja cienia (przesunięta o 3 piksele w dół i 3 piksele w prawo)  
-   shadow.style.left = (overlay.offsetLeft - borderWidth + 3) + 'px';  
-   shadow.style.top = (overlay.offsetTop - borderWidth + 2) + 'px';  
-}
-
+   shadow.style.width = (overlay.offsetWidth + borderWidth * 2) + 'px';  
+   shadow.style.height = (overlay.offsetHeight + borderWidth * 2) + 'px';  
+   shadow.style.left = (overlay.offsetLeft - borderWidth) + 'px';  
+   shadow.style.top = (overlay.offsetTop - borderWidth) + 'px';
+   shadow.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+   shadow.style.filter = 'blur(10px)';
+}  
   
 // Obsługa kształtu nakładki  
-document.querySelectorAll('.btn').forEach(btn => {  
-   btn.addEventListener('click', function() {  
+document.querySelectorAll('[data-shape]').forEach(btn => {  
+   btn.addEventListener('click', function() {
+      // Usuń active ze wszystkich przycisków
+      document.querySelectorAll('[data-shape]').forEach(b => b.classList.remove('active'));
+      // Dodaj active do klikniętego przycisku
+      this.classList.add('active');
+      
       const shape = this.dataset.shape;  
       if (shape === 'circle') {  
         overlayContainer.classList.add('circle');  
@@ -181,7 +184,7 @@ document.getElementById('autoFitBtn').addEventListener('click', function() {
    updateMainImagePosition();  
 });  
   
-// Wczytywanie zdjęć  
+// Wczytywanie zdjęć z automatycznym dopasowaniem
 document.getElementById('mainImageInput').addEventListener('change', function(e) {  
    const file = e.target.files[0];  
    if (file) {  
@@ -189,6 +192,16 @@ document.getElementById('mainImageInput').addEventListener('change', function(e)
       reader.onload = function(e) {  
         mainImage.src = e.target.result;  
         mainImage.style.display = 'block';  
+        // Automatyczne dopasowanie po załadowaniu
+        mainImage.onload = function() {
+            mainImageOffset = { x: 0, y: 0 };  
+            mainImageScale = 1;  
+            document.getElementById('mainImageScale').value = 100;  
+            mainImage.style.width = '100%';  
+            mainImage.style.height = '100%';  
+            mainImage.style.objectFit = 'cover';  // Zmienione na 'cover' aby wypełniało obszar
+            updateMainImagePosition();
+        };
       };  
       reader.readAsDataURL(file);  
    }  
@@ -201,12 +214,17 @@ document.getElementById('overlayImageInput').addEventListener('change', function
       reader.onload = function(e) {  
         overlayImage.src = e.target.result;  
         overlayImage.style.display = 'block';  
+        overlayImage.style.width = '100%';
+        overlayImage.style.height = '100%';
+        overlayImage.style.objectFit = 'cover';
       };  
       reader.readAsDataURL(file);  
    }  
-});  
-  
-// Znajdź istniejący kod na końcu pliku i zamień go na ten:
+});
+
+// ----------------
+// Dodaj na końcu pliku script.js:
+// ----------------
 
 // Zapisz jako...  
 document.getElementById('saveAsBtn').addEventListener('click', function() {
@@ -215,9 +233,6 @@ document.getElementById('saveAsBtn').addEventListener('click', function() {
     domtoimage.toPng(editorContainer, {
         quality: 1,
         bgcolor: '#fff',
-        style: {
-            'transform': 'none'
-        }
     })
     .then(function(dataUrl) {
         const link = document.createElement('a');
@@ -238,9 +253,6 @@ document.getElementById('copyToClipboardBtn').addEventListener('click', function
     domtoimage.toBlob(editorContainer, {
         quality: 1,
         bgcolor: '#fff',
-        style: {
-            'transform': 'none'
-        }
     })
     .then(async function(blob) {
         try {
@@ -253,65 +265,7 @@ document.getElementById('copyToClipboardBtn').addEventListener('click', function
         }
     })
     .catch(function(error) {
-        console.error('Błąd podczas tworzenia zrzutu:', error);
-        alert('Wystąpił błąd podczas tworzenia zrzutu ekranu.');
-    });
-});
-
-// Zrzut ekranu
-document.getElementById('screenshotBtn').addEventListener('click', function() {
-    const editorContainer = document.getElementById('editorContainer');
-
-    domtoimage.toPng(editorContainer, {
-        quality: 1,
-        bgcolor: '#fff',
-        style: {
-            'transform': 'none'
-        }
-    })
-    .then(function (dataUrl) {
-        const previewContainer = document.createElement('div');
-        previewContainer.className = 'screenshot-preview';
-        
-        previewContainer.innerHTML = `
-            <img src="${dataUrl}" alt="Podgląd zrzutu ekranu">
-            <div class="btn-container">
-                <button class="btn" id="downloadScreenshot">Pobierz</button>
-                <button class="btn" id="copyScreenshot">Kopiuj do schowka</button>
-                <button class="btn" id="closePreview">Zamknij</button>
-            </div>
-        `;
-
-        document.body.appendChild(previewContainer);
-
-        // Obsługa przycisku pobierania
-        document.getElementById('downloadScreenshot').onclick = () => {
-            const link = document.createElement('a');
-            link.download = 'zrzut_edytora.png';
-            link.href = dataUrl;
-            link.click();
-        };
-
-        // Obsługa kopiowania do schowka
-        document.getElementById('copyScreenshot').onclick = async () => {
-            try {
-                const response = await fetch(dataUrl);
-                const blob = await response.blob();
-                const item = new ClipboardItem({ 'image/png': blob });
-                await navigator.clipboard.write([item]);
-                alert('Skopiowano do schowka!');
-            } catch (err) {
-                alert('Nie udało się skopiować do schowka: ' + err.message);
-            }
-        };
-
-        // Obsługa zamknięcia podglądu
-        document.getElementById('closePreview').onclick = () => {
-            previewContainer.remove();
-        };
-    })
-    .catch(function (error) {
-        console.error('Błąd podczas tworzenia zrzutu ekranu:', error);
-        alert('Wystąpił błąd podczas tworzenia zrzutu ekranu.');
+        console.error('Błąd podczas tworzenia obrazu:', error);
+        alert('Wystąpił błąd podczas kopiowania do schowka.');
     });
 });
