@@ -1,117 +1,113 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edytor zdjęć</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-</head>
-<body>
-    <div class="controls">
-        <div class="control-group">
-            <button class="btn active" data-shape="circle">Koło</button>
-            <button class="btn" data-shape="square">Kwadrat</button>
-        </div>
-
-        <div class="control-group">
-            <label>Kolor obramowania:</label>
-            <input type="color" id="borderColor" value="#FFFFFF">
-            <div class="color-presets">
-                <button class="color-btn" data-color="#FFFFFF" style="background: #FFFFFF; border: 1px solid #ccc;"></button>
-                <button class="color-btn" data-color="#FF0000" style="background: #FF0000;"></button>
-                <button class="color-btn" data-color="#000000" style="background: #000000;"></button>
-                <button class="color-btn" data-color="#0066FF" style="background: #0066FF;"></button>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <label>Grubość ramki:</label>
-            <input type="range" id="borderWidth" min="1" max="50" value="7">
-            <input type="number" id="borderWidthInput" value="7" min="1" max="50"> px
-        </div>
-
-        <div class="control-group">
-            <label>Wielkość nakładki:</label>
-            <input type="range" id="overlaySize" min="50" max="400" value="150">
-            <input type="number" id="overlaySizeInput" value="150" min="50" max="400"> px
-        </div>
-
-        <div class="control-group">
-            <label>
-                <input type="checkbox" id="shadowToggle">
-                Cień pod nakładką
-            </label>
-        </div>
-    </div>
-
-    <div class="navigation-controls">
-        <div class="nav-control">
-            <div class="nav-arrows" id="mainImageNav">
-                <button class="arrow up">↑</button>
-                <button class="arrow right">→</button>
-                <button class="arrow down">↓</button>
-                <button class="arrow left">←</button>
-                <div class="arrow-center">⇄</div>
-            </div>
-            <span class="nav-label">Kadruj zdjęcie główne</span>
-        </div>
-
-        <div class="nav-control">
-            <div class="nav-arrows" id="overlayImageNav">
-                <button class="arrow up">↑</button>
-                <button class="arrow right">→</button>
-                <button class="arrow down">↓</button>
-                <button class="arrow left">←</button>
-                <div class="arrow-center">⇄</div>
-            </div>
-            <span class="nav-label">Kadruj zdjęcie nakładki</span>
-        </div>
-    </div>
-
-    <div class="control-group">
-        <label>Powiększ zdjęcie główne:</label>
-        <input type="range" id="mainImageScale" min="100" max="200" value="100">
-        <span>100%</span>
-    </div>
-
-    <div id="editorContainer">
-        <div id="mainImageContainer">
-            <img id="mainImage" alt="Główne zdjęcie">
-        </div>
-
-        <div id="overlayContainer" class="circle">
-            <!-- SVG cień -->
-            <svg class="shadow-svg" width="100%" height="100%" style="position: absolute; top: 5px; left: 5px; z-index: -1; display: none;">
-                <circle class="shadow-shape" cx="50%" cy="50%" r="47%" fill="rgba(0,0,0,0.7)"/>
-                <rect class="shadow-shape" x="0" y="0" width="100%" height="100%" fill="rgba(0,0,0,0.7)" style="display: none;"/>
-            </svg>
-            <img id="overlayImage" alt="Nakładka">
-            <div class="resize-handle"></div>
-        </div>
-    </div>
-
-    <div class="control-group">
-        <label>Powiększ zdjęcie nakładki:</label>
-        <input type="range" id="overlayImageScale" min="100" max="200" value="100">
-        <span>100%</span>
-    </div>
-
-    <div class="control-group">
-        <label>Zdjęcie główne:</label>
-        <input type="file" id="mainImageInput" accept="image/*">
-        <button id="autoFitBtn" class="btn">Autodopasowanie zdjęcia</button>
-    </div>
-
-    <div class="control-group">
-        <label>Zdjęcie nakładki:</label>
-        <input type="file" id="overlayImageInput" accept="image/*">
-    </div>
-
-    <div class="save-options">
-        <button id="saveAsBtn" class="btn">Zapisz jako...</button>
-        <button id="copyToClipboardBtn" class="btn">Skopiuj do schowka</button>
-    </div>
-</body>
+<!DOCTYPE html>  
+<html lang="pl">  
+<head>  
+   <meta charset="UTF-8">  
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+   <title>Edytor zdjęć</title>  
+   <link rel="stylesheet" href="style.css">  
+   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>  
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>  
+</head>  
+<body>  
+   <p style="background-image: url('https://img.freepik.com/free-vector/abstract-geometric-wireframe-background_52683-59421.jpg');">  
+   <div class="controls">  
+      <div class="control-group">  
+        <button class="btn active" data-shape="circle">Koło</button>  
+        <button class="btn" data-shape="square">Kwadrat</button>  
+      </div>  
+  
+      <div class="control-group">  
+        <label>Kolor obramowania:</label>  
+        <input type="color" id="borderColor" value="#FFFFFF">  
+        <div class="color-presets">  
+           <button class="color-btn" data-color="#FFFFFF" style="background: #FFFFFF; border: 1px solid #ccc;"></button>  
+           <button class="color-btn" data-color="#FF0000" style="background: #FF0000;"></button>  
+           <button class="color-btn" data-color="#000000" style="background: #000000;"></button>  
+           <button class="color-btn" data-color="#0066FF" style="background: #0066FF;"></button>  
+        </div>  
+      </div>  
+  
+      <div class="control-group">  
+        <label>Grubość ramki:</label>  
+        <input type="range" id="borderWidth" min="1" max="50" value="7">  
+        <input type="number" id="borderWidthInput" value="7" min="1" max="50"> px  
+      </div>  
+  
+      <div class="control-group">  
+        <label>Wielkość nakładki:</label>  
+        <input type="range" id="overlaySize" min="50" max="400" value="150">  
+        <input type="number" id="overlaySizeInput" value="150" min="50" max="400"> px  
+      </div>  
+  
+      <div class="control-group">  
+        <label>  
+           <input type="checkbox" id="shadowToggle">  
+           Cień pod nakładką  
+        </label>  
+      </div>  
+   </div>  
+  
+   <div class="navigation-controls">  
+      <div class="nav-control">  
+        <span>Kadruj zdjęcie główne</span>  
+        <div class="nav-arrows" id="mainImageNav">  
+           <button class="arrow up">↑</button>  
+           <button class="arrow right">→</button>  
+           <button class="arrow down">↓</button>  
+           <button class="arrow left">←</button>  
+        </div>  
+      </div>  
+  
+      <div class="nav-control">  
+        <span>Kadruj zdjęcie nakładki</span>  
+        <div class="nav-arrows" id="overlayImageNav">  
+           <button class="arrow up">↑</button>  
+           <button class="arrow right">→</button>  
+           <button class="arrow down">↓</button>  
+           <button class="arrow left">←</button>  
+        </div>  
+      </div>  
+   </div>  
+  
+   <div class="control-group">  
+      <label>Powiększ zdjęcie główne:</label>  
+      <input type="range" id="mainImageScale" min="100" max="200" value="100">  
+      <span>100%</span>  
+   </div>  
+  
+   <div id="editorContainer">  
+      <div id="mainImageContainer">  
+        <img id="mainImage" alt="Główne zdjęcie">  
+      </div>  
+      <div id="shadow"></div>  
+      <div id="overlayContainer" class="circle">  
+        <img id="overlayImage" alt="Nakładka">  
+        <div class="resize-handle"></div>  
+      </div>  
+   </div>  
+  
+   <div class="control-group">  
+      <label>Powiększ zdjęcie nakładki:</label>  
+      <input type="range" id="overlayImageScale" min="100" max="200" value="100">  
+      <span>100%</span>  
+   </div>  
+  
+   <div class="control-group">  
+      <label>Zdjęcie główne:</label>  
+      <input type="file" id="mainImageInput" accept="image/*">  
+      <button id="autoFitBtn" class="btn">Autodopasowanie zdjęcia</button>  
+   </div>  
+  
+   <div class="control-group">  
+      <label>Zdjęcie nakładki:</label>  
+      <input type="file" id="overlayImageInput" accept="image/*">  
+   </div>  
+  
+   <div class="save-options">  
+      <button id="saveAsBtn" class="btn">Zapisz jako...</button>  
+      <button id="copyToClipboardBtn" class="btn">Skopiuj do schowka</button>  
+   </div>  
+  
+   <script src="script.js"></script>  
+</body>  
 </html>
