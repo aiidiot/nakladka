@@ -206,31 +206,112 @@ document.getElementById('overlayImageInput').addEventListener('change', function
    }  
 });  
   
+// Znajdź istniejący kod na końcu pliku i zamień go na ten:
+
 // Zapisz jako...  
-document.getElementById('saveAsBtn').addEventListener('click', async function() {  
-const canvas = await html2canvas(document.getElementById('editorContainer'), {
-   useCORS: true, // Wymuszanie ładowania obrazów z zewnętrznych źródeł
-   scale: 2, // Wyższa jakość renderowania
-   onclone: (clonedDocument) => {
-      const overlayImage = clonedDocument.getElementById('overlayImage');
-      overlayImage.style.borderRadius = '50%'; // Wymuszenie kształtu koła
-   }
-}); 
-   canvas.toBlob(function(blob) {  
-      saveAs(blob, 'edytowane_zdjecie.jpg');  
-   });  
-});  
-  
-// Skopiuj do schowka  
-document.getElementById('copyToClipboardBtn').addEventListener('click', async function() {  
-   const canvas = await html2canvas(document.getElementById('editorContainer'));  
-   canvas.toBlob(async blob => {  
-      try {  
-        const item = new ClipboardItem({ "image/png": blob });  
-        await navigator.clipboard.write([item]);  
-        alert('Skopiowano do schowka! Możesz teraz wkleić obraz w dowolnym programie graficznym.');  
-      } catch(e) {  
-        alert('Nie udało się skopiować do schowka. Spróbuj użyć przycisku "Zapisz jako..."');  
-      }  
-   });  
+document.getElementById('saveAsBtn').addEventListener('click', function() {
+    const editorContainer = document.getElementById('editorContainer');
+    
+    domtoimage.toPng(editorContainer, {
+        quality: 1,
+        bgcolor: '#fff',
+        style: {
+            'transform': 'none'
+        }
+    })
+    .then(function(dataUrl) {
+        const link = document.createElement('a');
+        link.download = 'edytowane_zdjecie.png';
+        link.href = dataUrl;
+        link.click();
+    })
+    .catch(function(error) {
+        console.error('Błąd podczas zapisywania:', error);
+        alert('Wystąpił błąd podczas zapisywania zdjęcia.');
+    });
+});
+
+// Kopiuj do schowka
+document.getElementById('copyToClipboardBtn').addEventListener('click', function() {
+    const editorContainer = document.getElementById('editorContainer');
+    
+    domtoimage.toBlob(editorContainer, {
+        quality: 1,
+        bgcolor: '#fff',
+        style: {
+            'transform': 'none'
+        }
+    })
+    .then(async function(blob) {
+        try {
+            const item = new ClipboardItem({ 'image/png': blob });
+            await navigator.clipboard.write([item]);
+            alert('Skopiowano do schowka! Możesz teraz wkleić obraz w dowolnym programie graficznym.');
+        } catch(err) {
+            console.error('Błąd kopiowania do schowka:', err);
+            alert('Nie udało się skopiować do schowka. Spróbuj użyć przycisku "Zapisz jako..."');
+        }
+    })
+    .catch(function(error) {
+        console.error('Błąd podczas tworzenia zrzutu:', error);
+        alert('Wystąpił błąd podczas tworzenia zrzutu ekranu.');
+    });
+});
+
+// Zrzut ekranu
+document.getElementById('screenshotBtn').addEventListener('click', function() {
+    const editorContainer = document.getElementById('editorContainer');
+
+    domtoimage.toPng(editorContainer, {
+        quality: 1,
+        bgcolor: '#fff',
+        style: {
+            'transform': 'none'
+        }
+    })
+    .then(function (dataUrl) {
+        const previewContainer = document.createElement('div');
+        previewContainer.className = 'screenshot-preview';
+        
+        previewContainer.innerHTML = `
+            <img src="${dataUrl}" alt="Podgląd zrzutu ekranu">
+            <div class="btn-container">
+                <button class="btn" id="downloadScreenshot">Pobierz</button>
+                <button class="btn" id="copyScreenshot">Kopiuj do schowka</button>
+                <button class="btn" id="closePreview">Zamknij</button>
+            </div>
+        `;
+
+        document.body.appendChild(previewContainer);
+
+        // Obsługa przycisku pobierania
+        document.getElementById('downloadScreenshot').onclick = () => {
+            const link = document.createElement('a');
+            link.download = 'zrzut_edytora.png';
+            link.href = dataUrl;
+            link.click();
+        };
+
+        // Obsługa kopiowania do schowka
+        document.getElementById('copyScreenshot').onclick = async () => {
+            try {
+                const response = await fetch(dataUrl);
+                const blob = await response.blob();
+                const item = new ClipboardItem({ 'image/png': blob });
+                await navigator.clipboard.write([item]);
+                alert('Skopiowano do schowka!');
+            } catch (err) {
+                alert('Nie udało się skopiować do schowka: ' + err.message);
+            }
+        };
+
+        // Obsługa zamknięcia podglądu
+        document.getElementById('closePreview').onclick = () => {
+            previewContainer.remove();
+        };
+    })
+    .catch(function (error) {
+        console.error('Błąd podczas tworzenia zrzutu ekranu:', error);
+        alert('Wystąpił błąd podczas tworzenia zrzutu ekranu.');
+    });
 });
