@@ -189,7 +189,7 @@ async function renderWithShadow() {
 
 // Obsługa zapisu
 document.getElementById('saveAsBtn').addEventListener('click', async function() {
-    const canvas = await renderWithShadow();
+    const canvas = await generateFinalCanvas();
     
     // Pobranie nazwy pliku
     const mainImageName = document.getElementById('mainImageInput').files[0]?.name || 'image';
@@ -200,25 +200,30 @@ document.getElementById('saveAsBtn').addEventListener('click', async function() 
     const fileName = `${baseName}_${String(lastNumber).padStart(3, '0')}.jpg`;
 
     // Zapis pliku
-    canvas.toBlob(function(blob) {
+    canvas.toBlob(blob => {
         saveAs(blob, fileName);
     }, 'image/jpeg', 0.95);
 });
 
-// Obsługa kopiowania do schowka
+
+/// Obsługa kopiowania do schowka
 document.getElementById('copyToClipboardBtn').addEventListener('click', async function() {
-    const canvas = await renderWithShadow();
-    
-    canvas.toBlob(async function(blob) {
-        try {
-            const clipboardItem = new ClipboardItem({ 'image/png': blob });
-            await navigator.clipboard.write([clipboardItem]);
-            alert('Skopiowano do schowka! Możesz teraz wkleić obraz w dowolnym programie graficznym.');
-        } catch(e) {
-            alert('Nie udało się skopiować do schowka. Spróbuj użyć przycisku "Zapisz jako..."');
-            console.error('Błąd kopiowania do schowka:', e);
-        }
-    }, 'image/png');
+    try {
+        const canvas = await generateFinalCanvas();
+        canvas.toBlob(async blob => {
+            try {
+                const item = new ClipboardItem({ 'image/png': blob });
+                await navigator.clipboard.write([item]);
+                alert('Skopiowano do schowka!');
+            } catch(e) {
+                console.error('Błąd kopiowania:', e);
+                alert('Nie udało się skopiować do schowka. Spróbuj zapisać plik.');
+            }
+        }, 'image/png');
+    } catch(e) {
+        console.error('Błąd generowania obrazu:', e);
+        alert('Wystąpił błąd podczas generowania obrazu.');
+    }
 });
 
 // Obsługa wczytywania zdjęć
