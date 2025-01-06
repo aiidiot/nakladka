@@ -149,8 +149,8 @@ function updateShadow() {
    shadow.style.height = (overlay.offsetHeight + borderWidth * 1) + 'px';  
     
    // Pozycja cienia (przesunięta o 3 piksele w dół i 3 piksele w prawo)  
-   shadow.style.left = (overlay.offsetLeft - borderWidth + 4) + 'px';  
-   shadow.style.top = (overlay.offsetTop - borderWidth + 4) + 'px';  
+   shadow.style.left = (overlay.offsetLeft - borderWidth + 3) + 'px';  
+   shadow.style.top = (overlay.offsetTop - borderWidth + 2) + 'px';  
 }
 
   
@@ -208,7 +208,14 @@ document.getElementById('overlayImageInput').addEventListener('change', function
   
 // Zapisz jako...  
 document.getElementById('saveAsBtn').addEventListener('click', async function() {  
-   const canvas = await html2canvas(document.getElementById('editorContainer'));  
+const canvas = await html2canvas(document.getElementById('editorContainer'), {
+   useCORS: true, // Wymuszanie ładowania obrazów z zewnętrznych źródeł
+   scale: 2, // Wyższa jakość renderowania
+   onclone: (clonedDocument) => {
+      const overlayImage = clonedDocument.getElementById('overlayImage');
+      overlayImage.style.borderRadius = '50%'; // Wymuszenie kształtu koła
+   }
+}); 
    canvas.toBlob(function(blob) {  
       saveAs(blob, 'edytowane_zdjecie.jpg');  
    });  
