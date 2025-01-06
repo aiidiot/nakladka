@@ -9,6 +9,7 @@ let overlayImageScale = 1;
 const overlayContainer = document.getElementById('overlayContainer');
 const mainImage = document.getElementById('mainImage');
 const overlayImage = document.getElementById('overlayImage');
+const editorContainer = document.getElementById('editorContainer');
 
 // Obsługa przycisków kolorów
 document.querySelectorAll('.color-btn').forEach(btn => {
@@ -112,37 +113,6 @@ function updateOverlaySize(value) {
 document.getElementById('overlaySize').addEventListener('input', e => updateOverlaySize(e.target.value));
 document.getElementById('overlaySizeInput').addEventListener('input', e => updateOverlaySize(e.target.value));
 
-// Obsługa wczytywania zdjęć
-function handleImageUpload(input, imgElement, placeholder) {
-    input.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                imgElement.src = e.target.result;
-                imgElement.style.display = 'block';
-                if (placeholder) {
-                    placeholder.style.display = 'none';
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-}
-
-// Inicjalizacja wczytywania zdjęć
-handleImageUpload(
-    document.getElementById('mainImageInput'), 
-    document.getElementById('mainImage'),
-    document.getElementById('mainImagePlaceholder')
-);
-
-handleImageUpload(
-    document.getElementById('overlayImageInput'), 
-    document.getElementById('overlayImage'),
-    document.getElementById('overlayImagePlaceholder')
-);
-
 // Obsługa cienia
 document.getElementById('shadowToggle').addEventListener('change', function(e) {
     if (this.checked) {
@@ -152,56 +122,110 @@ document.getElementById('shadowToggle').addEventListener('change', function(e) {
     }
 });
 
-// Obsługa zapisu
-document.getElementById('saveAsBtn').addEventListener('click', async function() {
-    const canvas = await html2canvas(document.getElementById('editorContainer'), {
+// Funkcja do renderowania z cieniem
+async function renderWithShadow() {
+    // Tworzymy tymczasowy canvas o rozmiarach edytora
+    const tempCanvas = document.createElement('canvas');
+    const ctx = tempCanvas.getContext('2d');
+    tempCanvas.width = editorContainer.offsetWidth;
+    tempCanvas.height = editorContainer.offsetHeight;
+
+    // Rysujemy główne zdjęcie
+    await html2canvas(document.getElementById('mainImageContainer'), {
+        canvas: tempCanvas,
         useCORS: true,
         allowTaint: true,
-        backgroundColor: null,
-        onrendered: function(canvas) {
-            // Dodajemy cień jeśli jest włączony
-            if (document.getElementById('shadowToggle').checked) {
-                const ctx = canvas.getContext('2d');
-                const overlayRect = overlayContainer.getBoundingClientRect();
-                const editorRect = editorContainer.getBoundingClientRect();
-                
-                ctx.save();
-                ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
-                ctx.shadowBlur = 16;
-                ctx.shadowOffsetX = 0;
-                ctx.shadowOffsetY = 8;
-                
-                if (overlayContainer.classList.contains('circle')) {
-                    ctx.beginPath();
-                    ctx.arc(
-                        overlayRect.left - editorRect.left + overlayRect.width/2,
-                        overlayRect.top - editorRect.top + overlayRect.height/2,
-                        overlayRect.width/2,
-                        0,
-                        Math.PI * 2
-                    );
-                    ctx.fill();
-                }
-                ctx.restore();
-            }
-        }
+        backgroundColor: null
     });
 
-    // Pobranie nazwy pliku głównego zdjęcia
+    // Jeśli włączony jest cień, rysujemy go
+    if (document.getElementById('shadowToggle').checked) {
+        ctx.save();
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+        ctx.shadowBlur = 16;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 8;
+
+        // Pozycja nakładki
+        const overlayRect = overlayContainer.getBoundingClientRect();
+        const editorRect = editorContainer.getBoundingClientRect();
+        const x = overlayRect.left - editorRect.left;
+        const y = overlayRect.top - editorRect.top;
+
+        // Rysujemy kształt cienia
+        if (overlayContainer.classList.contains('circle')) {
+            ctx.beginPath();
+            ctx.arc(
+                x + overlayRect.width/2,
+                y + overlayRect.height/2,
+                overlayRect.width/2,
+                0,
+                Math.PI * 2
+            );
+            ctx.fill();
+        } else {
+            ctx.fillRect(x, y, overlayRect.width, overlayRect.height);
+        }
+        ctx.restore();
+    }
+
+    // Rysujemy nakładkę
+    await html2canvas(overlayContainer, {
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: null
+    }).then(overlayCanvas => {
+        const overlayRect = overlayContainer.getBoundingClientRect();
+        const editorRect = editorContainer.getBoundingClientRect();
+        ctx.drawImage(
+            overlayCanvas,
+            overlayRect.left - editorRect.left,
+            overlayRect.top - editorRect.top
+        );
+    });
+
+    return tempCanvas;
+}
+
+// Obsługa zapisu
+document.getElementById('saveAsBtn').addEventListener('click', async function() {
+    const canvas = await renderWithShadow();
+    
+    // Pobranie nazwy pliku
     const mainImageName = document.getElementById('mainImageInput').files[0]?.name || 'image';
     const baseName = mainImageName.replace(/\.[^/.]+$/, "");
-    
-    // Pobranie ostatniego numeru
     let lastNumber = parseInt(localStorage.getItem('lastFileNumber') || '0');
     lastNumber++;
     localStorage.setItem('lastFileNumber', lastNumber);
-    
-    // Utworzenie nazwy pliku
-    const paddedNumber = String(lastNumber).padStart(3, '0');
-    const fileName = `${baseName}_${paddedNumber}.jpg`;
+    const fileName = `${baseName}_${String(lastNumber).padStart(3, '0')}.jpg`;
 
-    // Konwersja canvas do Blob i zapis
+    // Zapis pliku
     canvas.toBlob(function(blob) {
         saveAs(blob, fileName);
     }, 'image/jpeg', 0.95);
 });
+
+// Obsługa kopiowania do schowka
+document.getElementById('copyToClipboardBtn').addEventListener('click', async function() {
+    const canvas = await renderWithShadow();
+    
+    canvas.toBlob(async function(blob) {
+        try {
+            const clipboardItem = new ClipboardItem({ 'image/png': blob });
+            await navigator.clipboard.write([clipboardItem]);
+            alert('Skopiowano do schowka! Możesz teraz wkleić obraz w dowolnym programie graficznym.');
+        } catch(e) {
+            alert('Nie udało się skopiować do schowka. Spróbuj użyć przycisku "Zapisz jako..."');
+            console.error('Błąd kopiowania do schowka:', e);
+        }
+    }, 'image/png');
+});
+
+// Obsługa wczytywania zdjęć
+function handleImageUpload(input, imgElement) {
+    input.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imgElement.src = e.target.result;
