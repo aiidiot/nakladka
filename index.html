@@ -9,13 +9,34 @@
 </head>  
 <body>  
    <div class="controls">  
-      <div class="control-group">  
-        <button class="btn active" data-shape="circle">Koło</button>  
-        <button class="btn" data-shape="square">Kwadrat</button>  
-      </div>  
-  
-      <div class="control-group">  
-        <label>Kolor obramowania:</label>  
+<div class="control-group" style="display: flex; gap: 20px;">
+    <button class="btn active" data-shape="circle">Koło</button>  
+    <button class="btn" data-shape="square">Kwadrat</button>  
+    <div class="navigation-controls">  
+        <div class="nav-control">  
+            <span>Kadruj zdjęcie główne</span>  
+            <div class="nav-arrows" id="mainImageNav">  
+                <button class="arrow up">↑</button>  
+                <button class="arrow right">→</button>  
+                <button class="arrow down">↓</button>  
+                <button class="arrow left">←</button>  
+            </div>  
+        </div>  
+    
+        <div class="nav-control">  
+            <span>Kadruj zdjęcie nakładki</span>  
+            <div class="nav-arrows" id="overlayImageNav">  
+                <button class="arrow up">↑</button>  
+                <button class="arrow right">→</button>  
+                <button class="arrow down">↓</button>  
+                <button class="arrow left">←</button>  
+            </div>  
+        </div>  
+    </div>
+</div>
+
+<div class="control-group">  
+    <label>Kolor obramowania:</label> 
         <input type="color" id="borderColor" value="#FFFFFF">  
         <div class="color-presets">  
            <button class="color-btn" data-color="#FFFFFF" style="background: #FFFFFF; border: 1px solid #ccc;"></button>  
@@ -39,32 +60,13 @@
   
       <div class="control-group">  
         <label>  
-           <input type="checkbox" id="shadowToggle">  
-           Cień pod nakładką  
+  <input type="checkbox" id="shadowToggle" checked>  
+   Cień pod nakładką   
         </label>  
       </div>  
    </div>  
   
-   <div class="navigation-controls">  
-      <div class="nav-control">  
-        <span>Kadruj zdjęcie główne</span>  
-        <div class="nav-arrows" id="mainImageNav">  
-           <button class="arrow up">↑</button>  
-           <button class="arrow right">→</button>  
-           <button class="arrow down">↓</button>  
-           <button class="arrow left">←</button>  
-        </div>  
-      </div>  
-  
-      <div class="nav-control">  
-        <span>Kadruj zdjęcie nakładki</span>  
-        <div class="nav-arrows" id="overlayImageNav">  
-           <button class="arrow up">↑</button>  
-           <button class="arrow right">→</button>  
-           <button class="arrow down">↓</button>  
-           <button class="arrow left">←</button>  
-        </div>  
-      </div>  
+
    </div>  
   
    <div class="control-group">  
