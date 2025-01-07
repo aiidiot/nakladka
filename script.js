@@ -304,12 +304,20 @@ document.getElementById('saveAsBtn').addEventListener('click', function() {
         quality: 1,
         bgcolor: '#fff',
     })
-    .then(function(dataUrl) {
-        const link = document.createElement('a');
-        link.download = 'edytowane_zdjecie.png';
-        link.href = dataUrl;
-        link.click();
-    })
+  .then(function(dataUrl) {
+    const date = new Date();
+    const timestamp = date.getFullYear() + 
+                     ('0' + (date.getMonth()+1)).slice(-2) + 
+                     ('0' + date.getDate()).slice(-2) + '_' +
+                     ('0' + date.getHours()).slice(-2) + 
+                     ('0' + date.getMinutes()).slice(-2);
+    const filename = 'Sklejka_' + timestamp + '.png';
+    
+    const link = document.createElement('a');
+    link.download = filename;
+    link.href = dataUrl;
+    link.click();
+})
     .catch(function(error) {
         console.error('Błąd podczas zapisywania:', error);
        alert('Wystąpił błąd podczas zapisywania zdjęcia.');
