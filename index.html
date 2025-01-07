@@ -15,7 +15,7 @@
       </div>  
   
       <div class="control-group">  
-        <label>Kolor obramowania:</label>  
+        <label>Kolor ramki:</label>  
         <input type="color" id="borderColor" value="#FFFFFF">  
         <div class="color-presets">  
            <button class="color-btn" data-color="#FFFFFF" style="background: #FFFFFF; border: 1px solid #ccc;"></button>  
@@ -27,14 +27,14 @@
   
       <div class="control-group">  
         <label>Grubość ramki:</label>  
-        <input type="range" id="borderWidth" min="1" max="50" value="7">  
-        <input type="number" id="borderWidthInput" value="7" min="1" max="50"> px  
+        <input type="range" id="borderWidth" min="1" max="50" value="6">  
+        <input type="number" id="borderWidthInput" value="7" min="1" max="20"> px  
       </div>  
   
       <div class="control-group">  
         <label>Wielkość nakładki:</label>  
-        <input type="range" id="overlaySize" min="50" max="400" value="150">  
-        <input type="number" id="overlaySizeInput" value="150" min="50" max="400"> px  
+        <input type="range" id="overlaySize" min="90" max="450" value="170">  
+        <input type="number" id="overlaySizeInput" value="170" min="90" max="450"> px  
       </div>  
   
       <div class="control-group">  
@@ -69,24 +69,24 @@
   
    <div class="control-group">  
       <label>Powiększ zdjęcie główne:</label>  
-      <input type="range" id="mainImageScale" min="100" max="200" value="100">  
+      <input type="range" id="mainImageScale" min="100" max="300" value="100">  
       <span>100%</span>  
    </div>  
 
     <div class="control-group">  
       <label>Powiększ zdjęcie nakładki:</label>  
-      <input type="range" id="overlayImageScale" min="100" max="200" value="100">  
+      <input type="range" id="overlayImageScale" min="100" max="300" value="100">  
       <span>100%</span>  
    </div>  
   
    <div class="control-group">  
-      <label>Zdjęcie główne:</label>  
+      <label>Zdjęcie główne (wskaż z dysku):</label>  
       <input type="file" id="mainImageInput" accept="image/*">  
       <button id="autoFitBtn" class="btn">Autodopasowanie zdjęcia</button>  
    </div>  
   
    <div class="control-group">  
-      <label>Zdjęcie nakładki:</label>  
+      <label>Zdjęcie nakładki (wskaż z dysku):</label>  
       <input type="file" id="overlayImageInput" accept="image/*">  
    </div>  
   
@@ -108,12 +108,12 @@
       <button id="copyToClipboardBtn" class="btn">Skopiuj do schowka</button>
    </div>  
 
-   <div style="text-align: right; font-size: 12px; color: #666; margin-top: 10px; font-family: Arial, sans-serif;">SklejkaMaker by Robert VER 1.3</div>
+   <div style="text-align: right; font-size: 12px; color: #666; margin-top: 10px; font-family: Arial, sans-serif;">SklejkaMaker by Robert VER 1.4</div>
    
 <div class="control-group">
     <label>Szablony:</label>
     <select id="templateSelect" style="padding: 5px; min-width: 200px;">
-        <option value="default">Domyślny</option>
+        <option value="default">Możesz wskazać zapisany przez siebie szablon</option>
     </select>
     <button id="loadTemplateBtn" class="btn">Wczytaj</button>
     <button id="deleteTemplateBtn" class="btn">Usuń wybrany szablon</button>
@@ -122,7 +122,7 @@
 <div class="control-group">
     <label>Nazwa nowego szablonu:</label>
     <input type="text" id="newTemplateName" placeholder="Wpisz nazwę szablonu" style="padding: 5px; min-width: 200px;">
-    <button id="saveTemplateBtn" class="btn">Zapisz jako szablon</button>
+    <button id="saveTemplateBtn" class="btn">Zapisz bieżącą wielkość, pozycję i kolor nakładki jako szablon</button>
 </div>
    
    
