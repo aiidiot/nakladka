@@ -67,7 +67,7 @@ document.addEventListener('mouseup', function() {
 });  
   
 // Obsługa strzałek dla głównego zdjęcia  
-const MOVE_STEP = 20;  
+const MOVE_STEP = 10;  
 document.querySelectorAll('#mainImageNav .arrow').forEach(arrow => {  
    arrow.addEventListener('click', function() {  
       const direction = this.classList[1];  
@@ -166,7 +166,7 @@ function updateShadow() {
    shadow.style.height = (overlay.offsetHeight + borderWidth * 2) + 'px';  
    shadow.style.left = (overlay.offsetLeft - borderWidth) + 'px';  
    shadow.style.top = (overlay.offsetTop - borderWidth) + 'px';
-   shadow.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+   shadow.style.backgroundColor = 'rgba(0, 0, 0, 0.66)';
    shadow.style.filter = 'blur(10px)';
 }  
   
