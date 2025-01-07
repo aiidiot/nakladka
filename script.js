@@ -408,9 +408,4 @@ document.getElementById('deleteTemplateBtn').addEventListener('click', function(
 window.addEventListener('DOMContentLoaded', function() {
     // Załaduj zapisane szablony do selecta
     loadSavedTemplates();
-   // Włącz cień domyślnie
-    const shadowToggle = document.getElementById('shadowToggle');
-    shadowToggle.checked = true;
-    shadow.style.display = 'block';
-    updateShadow();
 });
