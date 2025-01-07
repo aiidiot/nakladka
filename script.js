@@ -414,4 +414,3 @@ window.addEventListener('DOMContentLoaded', function() {
     shadow.style.display = 'block';
     updateShadow();
 });
-});
