@@ -36,6 +36,17 @@
         <input type="range" id="overlaySize" min="50" max="400" value="150">  
         <input type="number" id="overlaySizeInput" value="150" min="50" max="400"> px  
       </div>  
+
+      <div class="control-group">  
+      <label>Zdjęcie główne:</label>  
+      <input type="file" id="mainImageInput" accept="image/*">  
+      <button id="autoFitBtn" class="btn">Autodopasowanie zdjęcia</button>  
+   </div>  
+  
+   <div class="control-group">  
+      <label>Zdjęcie nakładki:</label>  
+      <input type="file" id="overlayImageInput" accept="image/*">  
+   </div>  
   
       <div class="control-group">  
         <label>  
@@ -72,6 +83,11 @@
       <input type="range" id="mainImageScale" min="100" max="200" value="100">  
       <span>100%</span>  
    </div>  
+     <div class="control-group">  
+      <label>Powiększ zdjęcie nakładki:</label>  
+      <input type="range" id="overlayImageScale" min="100" max="200" value="100">  
+      <span>100%</span>  
+   </div>  
   
    <div id="editorContainer">  
       <div id="mainImageContainer">  
@@ -84,22 +100,8 @@
       </div>  
    </div>  
   
-   <div class="control-group">  
-      <label>Powiększ zdjęcie nakładki:</label>  
-      <input type="range" id="overlayImageScale" min="100" max="200" value="100">  
-      <span>100%</span>  
-   </div>  
-  
-   <div class="control-group">  
-      <label>Zdjęcie główne:</label>  
-      <input type="file" id="mainImageInput" accept="image/*">  
-      <button id="autoFitBtn" class="btn">Autodopasowanie zdjęcia</button>  
-   </div>  
-  
-   <div class="control-group">  
-      <label>Zdjęcie nakładki:</label>  
-      <input type="file" id="overlayImageInput" accept="image/*">  
-   </div>  
+
+   
   
    <div class="save-options">  
       <button id="saveAsBtn" class="btn">Zapisz (plik się pobierze)...</button>  
