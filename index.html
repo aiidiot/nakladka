@@ -3,88 +3,84 @@
 <head>  
    <meta charset="UTF-8">  
    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-   <title>SklejkaMaker</title>  
+   <title>Edytor zdjęć</title>  
    <link rel="stylesheet" href="style.css">  
    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>  
 </head>  
 <body>  
    <div class="controls">  
-      <div class="control-group">
-         <button class="btn active" data-shape="circle">KOŁO</button>  
-         <button class="btn" data-shape="square">KWADRAT</button>  
-      </div>
-
-      <div class="control-group" style="display: flex; gap: 20px;">  
-         <label>Kolor ramki:</label> 
-         <input type="color" id="borderColor" value="#FFFFFF">  
-         <div class="color-presets">  
-            <button class="color-btn" data-color="#FFFFFF" style="background: #FFFFFF; border: 1px solid #ccc;"></button>  
-            <button class="color-btn" data-color="#FF0000" style="background: #FF0000;"></button>  
-            <button class="color-btn" data-color="#000000" style="background: #000000;"></button>  
-            <button class="color-btn" data-color="#0066FF" style="background: #0066FF;"></button>  
-         </div>  
+      <div class="control-group">  
+        <button class="btn active" data-shape="circle">Koło</button>  
+        <button class="btn" data-shape="square">Kwadrat</button>  
       </div>  
   
       <div class="control-group">  
-         <label>Grubość ramki:</label>  
-         <input type="range" id="borderWidth" min="1" max="50" value="7">  
-         <input type="number" id="borderWidthInput" value="7" min="1" max="50"> px  
+        <label>Kolor obramowania:</label>  
+        <input type="color" id="borderColor" value="#FFFFFF">  
+        <div class="color-presets">  
+           <button class="color-btn" data-color="#FFFFFF" style="background: #FFFFFF; border: 1px solid #ccc;"></button>  
+           <button class="color-btn" data-color="#FF0000" style="background: #FF0000;"></button>  
+           <button class="color-btn" data-color="#000000" style="background: #000000;"></button>  
+           <button class="color-btn" data-color="#0066FF" style="background: #0066FF;"></button>  
+        </div>  
       </div>  
   
       <div class="control-group">  
-         <label>Wielkość nakładki:</label>  
-         <input type="range" id="overlaySize" min="90" max="450" value="170">  
-         <input type="number" id="overlaySizeInput" value="170" min="50" max="450"> px  
+        <label>Grubość ramki:</label>  
+        <input type="range" id="borderWidth" min="1" max="50" value="7">  
+        <input type="number" id="borderWidthInput" value="7" min="1" max="50"> px  
       </div>  
   
       <div class="control-group">  
-         <label>  
-            <input type="checkbox" id="shadowToggle" checked>  
-            Cień pod nakładką (domyślnie włączony)  
-         </label>  
-      </div> 
-
-      <div class="control-group">  
-         <label>Zdjęcie główne (wskaż z dysku):</label>  
-         <input type="file" id="mainImageInput" accept="image/*">  
+        <label>Wielkość nakładki:</label>  
+        <input type="range" id="overlaySize" min="50" max="400" value="150">  
+        <input type="number" id="overlaySizeInput" value="150" min="50" max="400"> px  
       </div>  
   
       <div class="control-group">  
-         <label>Zdjęcie nakładki (wskaż z dysku):</label>  
-         <input type="file" id="overlayImageInput" accept="image/*">  
-      </div>
-
-      <div class="navigation-controls">  
-         <div class="nav-control">  
-            <span>Kadruj zdjęcie główne</span>  
-            <div class="nav-arrows" id="mainImageNav">  
-               <button class="arrow up">↑</button>  
-               <button class="arrow right">→</button>  
-               <button class="arrow down">↓</button>  
-               <button class="arrow left">←</button>  
-            </div>  
-         </div>  
-    
-         <div class="nav-control">  
-            <span>Kadruj zdjęcie nakładki</span>  
-            <div class="nav-arrows" id="overlayImageNav">  
-               <button class="arrow up">↑</button>  
-               <button class="arrow right">→</button>  
-               <button class="arrow down">↓</button>  
-               <button class="arrow left">←</button>  
-            </div>  
-         </div>  
-      </div>
-   </div>
-
+        <label>  
+           <input type="checkbox" id="shadowToggle">  
+           Cień pod nakładką  
+        </label>  
+      </div>  
+   </div>  
+  
+   <div class="navigation-controls">  
+      <div class="nav-control">  
+        <span>Kadruj zdjęcie główne</span>  
+        <div class="nav-arrows" id="mainImageNav">  
+           <button class="arrow up">↑</button>  
+           <button class="arrow right">→</button>  
+           <button class="arrow down">↓</button>  
+           <button class="arrow left">←</button>  
+        </div>  
+      </div>  
+  
+      <div class="nav-control">  
+        <span>Kadruj zdjęcie nakładki</span>  
+        <div class="nav-arrows" id="overlayImageNav">  
+           <button class="arrow up">↑</button>  
+           <button class="arrow right">→</button>  
+           <button class="arrow down">↓</button>  
+           <button class="arrow left">←</button>  
+        </div>  
+      </div>  
+   </div>  
+  
+   <div class="control-group">  
+      <label>Powiększ zdjęcie główne:</label>  
+      <input type="range" id="mainImageScale" min="100" max="200" value="100">  
+      <span>100%</span>  
+   </div>  
+  
    <div id="editorContainer">  
       <div id="mainImageContainer">  
-         <img id="mainImage" alt="Główne zdjęcie">  
+        <img id="mainImage" alt="Główne zdjęcie">  
       </div>  
       <div id="shadow"></div>  
       <div id="overlayContainer" class="circle">  
-         <img id="overlayImage" alt="Nakładka" style="aspect-ratio: 1/1;">  
-         <div class="resize-handle"></div>  
+        <img id="overlayImage" alt="Nakładka" style="aspect-ratio: 1/1;">  
+        <div class="resize-handle"></div>  
       </div>  
    </div>  
   
@@ -93,11 +89,16 @@
       <input type="range" id="overlayImageScale" min="100" max="200" value="100">  
       <span>100%</span>  
    </div>  
-
+  
    <div class="control-group">  
-      <label>Powiększ zdjęcie główne:</label>  
-      <input type="range" id="mainImageScale" min="100" max="200" value="100">  
-      <span>100%</span>  
+      <label>Zdjęcie główne:</label>  
+      <input type="file" id="mainImageInput" accept="image/*">  
+      <button id="autoFitBtn" class="btn">Autodopasowanie zdjęcia</button>  
+   </div>  
+  
+   <div class="control-group">  
+      <label>Zdjęcie nakładki:</label>  
+      <input type="file" id="overlayImageInput" accept="image/*">  
    </div>  
   
    <div class="save-options">  
@@ -105,22 +106,24 @@
       <button id="copyToClipboardBtn" class="btn">Skopiuj do schowka</button>
    </div>  
 
-   <div style="text-align: right; font-size: 12px; color: #666; margin-top: 12px; font-family: Arial, sans-serif;">SklejkaMaker by Robert VER 1.4</div>
+   <div style="text-align: right; font-size: 12px; color: #666; margin-top: 10px; font-family: Arial, sans-serif;">SklejkaMaker by Robert VER 1.3</div>
    
-   <div class="control-group">
-      <label>Szablony:</label>
-      <select id="templateSelect" style="padding: 5px; min-width: 200px;">
-         <option value="default">Domyślny</option>
-      </select>
-      <button id="loadTemplateBtn" class="btn">Wczytaj</button>
-      <button id="deleteTemplateBtn" class="btn">Usuń wybrany szablon</button>
-   </div>
+<div class="control-group">
+    <label>Szablony:</label>
+    <select id="templateSelect" style="padding: 5px; min-width: 200px;">
+        <option value="default">Domyślny</option>
+    </select>
+    <button id="loadTemplateBtn" class="btn">Wczytaj</button>
+    <button id="deleteTemplateBtn" class="btn">Usuń wybrany szablon</button>
+</div>
 
-   <div class="control-group">
-      <label>Nazwa nowego szablonu:</label>
-      <input type="text" id="newTemplateName" placeholder="Wpisz nazwę szablonu" style="padding: 5px; min-width: 200px;">
-      <button id="saveTemplateBtn" class="btn">Zapisz obecną pozycję, wielkość i kolor nakładki jako szablon</button>
-   </div>
+<div class="control-group">
+    <label>Nazwa nowego szablonu:</label>
+    <input type="text" id="newTemplateName" placeholder="Wpisz nazwę szablonu" style="padding: 5px; min-width: 200px;">
+    <button id="saveTemplateBtn" class="btn">Zapisz jako szablon</button>
+</div>
+   
+   
    
    <script src="script.js"></script>  
 </body>  
