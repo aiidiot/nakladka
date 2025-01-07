@@ -66,7 +66,17 @@
         </div>  
       </div>  
    </div>  
+ <div class="control-group">  
+      <label>Zdjęcie główne (wskaż z dysku):</label>  
+      <input type="file" id="mainImageInput" accept="image/*">  
+      <button id="autoFitBtn" class="btn">Autodopasowanie zdjęcia</button>  
+   </div>  
   
+   <div class="control-group">  
+      <label>Zdjęcie nakładki (wskaż z dysku):</label>  
+      <input type="file" id="overlayImageInput" accept="image/*">  
+   </div>  
+   
    <div class="control-group">  
       <label>Powiększ zdjęcie główne:</label>  
       <input type="range" id="mainImageScale" min="100" max="300" value="100">  
@@ -79,16 +89,7 @@
       <span>100%</span>  
    </div>  
   
-   <div class="control-group">  
-      <label>Zdjęcie główne (wskaż z dysku):</label>  
-      <input type="file" id="mainImageInput" accept="image/*">  
-      <button id="autoFitBtn" class="btn">Autodopasowanie zdjęcia</button>  
-   </div>  
   
-   <div class="control-group">  
-      <label>Zdjęcie nakładki (wskaż z dysku):</label>  
-      <input type="file" id="overlayImageInput" accept="image/*">  
-   </div>  
   
    <div id="editorContainer">  
       <div id="mainImageContainer">  
