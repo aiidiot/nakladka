@@ -10,14 +10,14 @@
 <body>  
    <div class="controls">  
 <div class="control-group">
-    <button class="btn active" data-shape="circle">Koło</button>  
-    <button class="btn" data-shape="square">Kwadrat</button>  
+    <button class="btn active" data-shape="circle">KOŁO</button>  
+    <button class="btn" data-shape="square">KWADRAT</button>  
    
     </div>
 </div>
 
 <div class="control-group"  style="display: flex; gap: 20px;">  
-    <label>Kolor obramowania:</label> 
+    <label>Kolor ramki:</label> 
         <input type="color" id="borderColor" value="#FFFFFF">  
         <div class="color-presets">  
            <button class="color-btn" data-color="#FFFFFF" style="background: #FFFFFF; border: 1px solid #ccc;"></button>  
@@ -35,16 +35,26 @@
   
       <div class="control-group">  
         <label>Wielkość nakładki:</label>  
-        <input type="range" id="overlaySize" min="50" max="400" value="150">  
-        <input type="number" id="overlaySizeInput" value="150" min="50" max="400"> px  
+        <input type="range" id="overlaySize" min="90" max="450" value="170">  
+        <input type="number" id="overlaySizeInput" value="170" min="50" max="450"> px  
       </div>  
   
       <div class="control-group">  
         <label>  
   <input type="checkbox" id="shadowToggle" checked>  
-   Cień pod nakładką   
+   Cień pod nakładką (domyślnie włączony)  
         </label>  
-      </div>  
+      </div> 
+     </div>  
+   <div class="control-group">  
+      <label>Zdjęcie główne (wskaż z dysku):</label>  
+      <input type="file" id="mainImageInput" accept="image/*">  
+    </div>  
+  
+   <div class="control-group">  
+      <label>Zdjęcie nakładki (wskaż z dysku):</label>  
+      <input type="file" id="overlayImageInput" accept="image/*">  
+   </div>  
    </div>  
    <div class="navigation-controls">  
         <div class="nav-control">  
@@ -67,16 +77,7 @@
             </div>  
         </div>  
 
-   </div>  
-   <div class="control-group">  
-      <label>Zdjęcie główne:</label>  
-      <input type="file" id="mainImageInput" accept="image/*">  
-    </div>  
-  
-   <div class="control-group">  
-      <label>Zdjęcie nakładki:</label>  
-      <input type="file" id="overlayImageInput" accept="image/*">  
-   </div>  
+ 
   
   
    <div id="editorContainer">  
@@ -123,7 +124,7 @@
 <div class="control-group">
     <label>Nazwa nowego szablonu:</label>
     <input type="text" id="newTemplateName" placeholder="Wpisz nazwę szablonu" style="padding: 5px; min-width: 200px;">
-    <button id="saveTemplateBtn" class="btn">Zapisz jako szablon</button>
+    <button id="saveTemplateBtn" class="btn">Zapisz obecną pozycję, wielkość i kolor nakładki jako szablon</button>
 </div>
    
    
