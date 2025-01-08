@@ -213,7 +213,13 @@ async function renderImage() {
         logging: true,
         imageTimeout: 0,
         removeContainer: true,
-        foreignObjectRendering: false
+        foreignObjectRendering: false,
+        onclone: (clonedDoc) => {
+            const overlayImage = clonedDoc.getElementById('overlayImage');
+            if (overlayImage) {
+                overlayImage.style.borderRadius = '100%';
+            }
+        }
     };
 
     try {
@@ -226,49 +232,82 @@ async function renderImage() {
     }
 }
 
-// Uniwersalna funkcja zapisu
+// Poprawiona funkcja zapisu
 document.getElementById('saveAsBtn').addEventListener('click', async function() {
     try {
         const canvas = await renderImage();
-        canvas.toBlob(function(blob) {
-            if (blob) {
-                saveAs(blob, 'edytowane_zdjecie.png');
-            } else {
-                throw new Error('Nie udało się utworzyć pliku obrazu');
-            }
-        }, 'image/png', 1.0);
+        const quality = 1.0;
+
+        canvas.toBlob(
+            function(blob) {
+                if (blob) {
+                    try {
+                        saveAs(blob, 'edytowane_zdjecie.png');
+                    } catch (saveError) {
+                        console.error('Błąd podczas zapisywania:', saveError);
+                        const link = document.createElement('a');
+                        link.download = 'edytowane_zdjecie.png';
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                    }
+                } else {
+                    throw new Error('Nie udało się utworzyć pliku obrazu');
+                }
+            },
+            'image/png',
+            quality
+        );
     } catch (error) {
+        console.error('Błąd:', error);
         alert('Wystąpił błąd podczas zapisywania. Spróbuj ponownie.');
-        console.error(error);
     }
 });
 
-// Uniwersalna funkcja kopiowania do schowka
+// Poprawiona funkcja kopiowania do schowka
 document.getElementById('copyToClipboardBtn').addEventListener('click', async function() {
     try {
         const canvas = await renderImage();
+        
         canvas.toBlob(async function(blob) {
             try {
-                const clipboardItem = new ClipboardItem({
-                    'image/png': blob
-                });
-                await navigator.clipboard.write([clipboardItem]);
-                alert('Skopiowano do schowka!');
+                if (navigator.clipboard && navigator.clipboard.write) {
+                    const clipboardItem = new ClipboardItem({
+                        'image/png': blob
+                    });
+                    await navigator.clipboard.write([clipboardItem]);
+                    alert('Skopiowano do schowka!');
+                } else {
+                    const dataUrl = canvas.toDataURL('image/png');
+                    const img = document.createElement('img');
+                    img.src = dataUrl;
+                    
+                    const div = document.createElement('div');
+                    div.contentEditable = true;
+                    div.appendChild(img);
+                    document.body.appendChild(div);
+                    
+                    const range = document.createRange();
+                    range.selectNodeContents(div);
+                    const selection = window.getSelection();
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                    
+                    const success = document.execCommand('copy');
+                    document.body.removeChild(div);
+                    
+                    if (success) {
+                        alert('Obraz został skopiowany do schowka');
+                    } else {
+                        throw new Error('Nie udało się skopiować');
+                    }
+                }
             } catch (error) {
-                console.error('Błąd kopiowania do schowka:', error);
-                // Uniwersalny fallback
-                const dataUrl = canvas.toDataURL('image/png');
-                const tempInput = document.createElement('input');
-                document.body.appendChild(tempInput);
-                tempInput.value = dataUrl;
-                tempInput.select();
-                document.execCommand('copy');
-                document.body.removeChild(tempInput);
-                alert('Obraz został skopiowany do schowka');
+                console.error('Błąd kopiowania:', error);
+                alert('Nie udało się skopiować obrazu. Spróbuj użyć przycisku "Zapisz jako..."');
             }
         }, 'image/png', 1.0);
     } catch (error) {
+        console.error('Błąd:', error);
         alert('Wystąpił błąd podczas kopiowania. Spróbuj użyć przycisku "Zapisz jako..."');
-        console.error(error);
     }
 });
