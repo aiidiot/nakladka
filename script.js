@@ -201,21 +201,26 @@ document.querySelectorAll('[data-shape]').forEach(btn => {
       this.classList.add('active');
       
       const shape = this.dataset.shape;  
-      overlayContainer.classList.remove('circle', 'square', 'sklejka');
-      shadow.classList.remove('sklejka');
-      
       if (shape === 'circle') {  
         overlayContainer.classList.add('circle');  
-        shadow.style.borderRadius = '50%';  
+        overlayContainer.classList.remove('square', 'sklejka');  
+        shadow.style.borderRadius = '50%';
+        overlayContainer.style.width = '150px';
+        overlayContainer.style.height = '150px';  
       } else if (shape === 'square') {  
         overlayContainer.classList.add('square');  
-        shadow.style.borderRadius = '0';  
+        overlayContainer.classList.remove('circle', 'sklejka');  
+        shadow.style.borderRadius = '0';
+        overlayContainer.style.width = '150px';
+        overlayContainer.style.height = '150px';  
       } else if (shape === 'sklejka') {
+        overlayContainer.classList.remove('circle', 'square');
         overlayContainer.classList.add('sklejka');
-        shadow.classList.add('sklejka');
-        overlayContainer.style.left = 'auto';
-        overlayContainer.style.right = '0';
+        shadow.style.borderRadius = '0';
+        overlayContainer.style.width = '50%';
+        overlayContainer.style.height = '100%';
         overlayContainer.style.top = '0';
+        overlayContainer.style.left = '0';
       }
       updateShadow();
    });  
@@ -331,22 +336,31 @@ function applySettings(settings) {
        overlayContainer.style.borderColor = settings.borderColor;
    }
 
-   // Ustawienie obrotu
-   if (settings.rotation !== undefined) {
-       overlayRotation = settings.rotation;
-       document.getElementById('rotationAngle').value = overlayRotation;
-       document.getElementById('rotationAngleInput').value = overlayRotation;
-       overlayImage.style.transform = `rotate(${overlayRotation}deg) scale(${overlayImageScale})`;
-   }
+  // Obsługa obrotu nakładki
+document.getElementById('rotationAngle').addEventListener('input', function(e) {
+    overlayRotation = parseInt(e.target.value);
+    document.getElementById('rotationAngleInput').value = overlayRotation;
+    
+    // Zachowaj skalowanie przy obrocie
+    const scale = overlayImageScale;
+    overlayImage.style.transform = `rotate(${overlayRotation}deg) scale(${scale})`;
+    overlayContainer.style.transform = `rotate(${overlayRotation}deg)`;  // Dodane obracanie kontenera
+    
+    console.log('Obrót:', overlayRotation, 'Skala:', scale); // Debugging
+    updateShadow();
+});
 
-   // Ustawienie pozycji
-   if (!overlayContainer.classList.contains('sklejka')) {
-       overlayContainer.style.left = settings.position.left + 'px';
-       overlayContainer.style.top = settings.position.top + 'px';
-   }
-
-   updateShadow();
-}
+// To samo dla pola numerycznego
+document.getElementById('rotationAngleInput').addEventListener('input', function(e) {
+    overlayRotation = parseInt(e.target.value);
+    document.getElementById('rotationAngle').value = overlayRotation;
+    
+    const scale = overlayImageScale;
+    overlayImage.style.transform = `rotate(${overlayRotation}deg) scale(${scale})`;
+    overlayContainer.style.transform = `rotate(${overlayRotation}deg)`;  // Dodane obracanie kontenera
+    
+    updateShadow();
+});
 
 // Zapisz jako...  
 document.getElementById('saveAsBtn').addEventListener('click', function() {
