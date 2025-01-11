@@ -34,18 +34,21 @@ function updateMainImagePosition() {
     mainImage.style.transform = `translate(calc(-50% + ${mainImageOffset.x}px), calc(-50% + ${mainImageOffset.y}px)) scale(${mainImageScale})`;
 }
 
-    // Ustawienie rozmiaru
-    updateOverlaySize(settings.overlaySize);
-    document.getElementById('overlaySize').value = settings.overlaySize;
-    document.getElementById('overlaySizeInput').value = settings.overlaySize;
-	
+// Ustawienie rozmiaru
+function updateOverlaySize(value) {
+    document.getElementById('overlaySize').value = value;
+    document.getElementById('overlaySizeInput').value = value;
+    overlayContainer.style.width = value + 'px';
+    overlayContainer.style.height = value + 'px';
+    updateShadow();
+}
 
-    // Ustawienie grubości ramki
-    const borderWidth = document.getElementById('borderWidth');
-    if (borderWidth) {
-        borderWidth.value = settings.borderWidth;
-        overlayContainer.style.borderWidth = settings.borderWidth + 'px';
-    }
+// Ustawienie grubości ramki
+const borderWidth = document.getElementById('borderWidth');
+if (borderWidth) {
+    borderWidth.value = settings.borderWidth;
+    overlayContainer.style.borderWidth = settings.borderWidth + 'px';
+}
 
 // Obsługa przycisków kolorów
 document.querySelectorAll('.color-btn').forEach(btn => {
@@ -75,7 +78,7 @@ if (rotationAngle && rotationAngleInput) {
         overlayContainer.style.transform = `rotate(${overlayRotation}deg)`;
         updateShadow();
     });
-
+}
 
 // Obsługa przeciągania nakładki
 if (overlayContainer) {
@@ -107,27 +110,18 @@ if (overlayContainer) {
     });
 }
 
-// Obsługa skalowania  
-document.getElementById('mainImageScale').addEventListener('input', function(e) {  
-   mainImageScale = e.target.value / 100;  
-   this.nextElementSibling.textContent = e.target.value + '%';  
-   updateMainImagePosition();  
-});  
-  
-document.getElementById('overlayImageScale').addEventListener('input', function(e) {  
-   overlayImageScale = e.target.value / 100;  
-   this.nextElementSibling.textContent = e.target.value + '%';  
-   overlayImage.style.transform = `scale(${overlayImageScale})`;  
-});  
-  
-// Obsługa wielkości nakładki  
-function updateOverlaySize(value) {  
-   document.getElementById('overlaySize').value = value;  
-   document.getElementById('overlaySizeInput').value = value;  
-   overlayContainer.style.width = value + 'px';  
-   overlayContainer.style.height = value + 'px';  
-   updateShadow();  
-}  
+// Obsługa skalowania
+document.getElementById('mainImageScale').addEventListener('input', function(e) {
+    mainImageScale = e.target.value / 100;
+    this.nextElementSibling.textContent = e.target.value + '%';
+    updateMainImagePosition();
+});
+
+document.getElementById('overlayImageScale').addEventListener('input', function(e) {
+    overlayImageScale = e.target.value / 100;
+    this.nextElementSibling.textContent = e.target.value + '%';
+    overlayImage.style.transform = `scale(${overlayImageScale})`;
+});
 
 // Obsługa zdjęć
 document.getElementById('mainImageInput').addEventListener('change', function(e) {
