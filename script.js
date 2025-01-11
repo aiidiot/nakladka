@@ -428,9 +428,17 @@ window.addEventListener('DOMContentLoaded', function() {
 document.getElementById('rotationAngle').addEventListener('input', function(e) {
     overlayRotation = parseInt(e.target.value);
     document.getElementById('rotationAngleInput').value = overlayRotation;
-    overlayImage.style.transform = `rotate(${overlayRotation}deg) scale(${overlayImageScale})`;
+    overlayContainer.style.transform = `rotate(${overlayRotation}deg) scale(${overlayImageScale})`;
     updateShadow();
 });
+
+document.getElementById('rotationAngleInput').addEventListener('input', function(e) {
+    overlayRotation = parseInt(e.target.value);
+    document.getElementById('rotationAngle').value = overlayRotation;
+    overlayContainer.style.transform = `rotate(${overlayRotation}deg) scale(${overlayImageScale})`;
+    updateShadow();
+});
+
 
 document.getElementById('rotationAngleInput').addEventListener('input', function(e) {
     overlayRotation = parseInt(e.target.value);
@@ -440,3 +448,31 @@ document.getElementById('rotationAngleInput').addEventListener('input', function
 });
 
 // Obsługa funkcji "sklejka"
+document.querySelectorAll('[data-shape]').forEach(btn => {
+    btn.addEventListener('click', function() {
+        // Usuń active ze wszystkich przycisków
+        document.querySelectorAll('[data-shape]').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+
+        const shape = this.dataset.shape;
+        overlayContainer.classList.remove('circle', 'square', 'sklejka');
+        shadow.style.borderRadius = '0';
+
+        if (shape === 'circle') {
+            overlayContainer.classList.add('circle');
+            shadow.style.borderRadius = '50%';
+        } else if (shape === 'sklejka') {
+            overlayContainer.classList.add('sklejka');
+            overlayContainer.style.width = '50%';
+            overlayContainer.style.height = '100%';
+            overlayContainer.style.left = '0';
+            overlayContainer.style.top = '0';
+            overlayContainer.style.transform = `rotate(${overlayRotation}deg)`;
+            shadow.style.borderRadius = '0'; // Dodane, aby cień zmieniał się na kwadratowy
+        } else {
+            overlayContainer.classList.add('square');
+        }
+        updateShadow();
+    });
+});
+
