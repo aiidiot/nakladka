@@ -198,3 +198,178 @@ window.addEventListener('DOMContentLoaded', function() {
         updateShadow();
     }
 });
+
+// Funkcje obsługi szablonów
+function getCurrentSettings() {
+    return {
+        shape: overlayContainer.classList.contains('circle') ? 'circle' : 'square',
+        overlaySize: overlayContainer.style.width.replace('px', ''),
+        borderWidth: overlayContainer.style.borderWidth.replace('px', ''),
+        borderColor: overlayContainer.style.borderColor,
+        position: {
+            left: overlayContainer.style.left.replace('px', ''),
+            top: overlayContainer.style.top.replace('px', '')
+        }
+    };
+}
+
+function applySettings(settings) {
+    // Ustawienie kształtu
+    if (settings.shape === 'circle') {
+        overlayContainer.classList.add('circle');
+        overlayContainer.classList.remove('square');
+        shadow.style.borderRadius = '50%';
+        document.querySelector('[data-shape="circle"]').classList.add('active');
+        document.querySelector('[data-shape="square"]').classList.remove('active');
+    } else {
+        overlayContainer.classList.add('square');
+        overlayContainer.classList.remove('circle');
+        shadow.style.borderRadius = '0';
+        document.querySelector('[data-shape="square"]').classList.add('active');
+        document.querySelector('[data-shape="circle"]').classList.remove('active');
+    }
+
+    // Ustawienie rozmiaru
+    updateOverlaySize(settings.overlaySize);
+    document.getElementById('overlaySize').value = settings.overlaySize;
+        document.getElementById('overlaySizeInput').value = settings.overlaySize;
+
+    // Ustawienie grubości ramki
+    const borderWidth = document.getElementById('borderWidth');
+    if (borderWidth) {
+        borderWidth.value = settings.borderWidth;
+        overlayContainer.style.borderWidth = settings.borderWidth + 'px';
+    }
+
+    // Ustawienie koloru
+    const borderColor = document.getElementById('borderColor');
+    if (borderColor) {
+        borderColor.value = settings.borderColor;
+        overlayContainer.style.borderColor = settings.borderColor;
+    }
+
+    // Ustawienie pozycji
+    overlayContainer.style.left = settings.position.left + 'px';
+    overlayContainer.style.top = settings.position.top + 'px';
+
+    updateShadow();
+}
+
+// Zapisz jako...
+document.getElementById('saveAsBtn').addEventListener('click', function() {
+    const editorContainer = document.getElementById('editorContainer');
+    
+    domtoimage.toPng(editorContainer, {
+        quality: 1,
+        bgcolor: '#fff',
+    })
+    .then(function(dataUrl) {
+        const date = new Date();
+        const timestamp = date.getFullYear() + 
+                         ('0' + (date.getMonth()+1)).slice(-2) + 
+                         ('0' + date.getDate()).slice(-2) + '_' +
+                         ('0' + date.getHours()).slice(-2) + 
+                         ('0' + date.getMinutes()).slice(-2);
+        const filename = 'Sklejka_' + timestamp + '.png';
+        
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = dataUrl;
+        link.click();
+    })
+    .catch(function(error) {
+        console.error('Błąd podczas zapisywania:', error);
+        alert('Wystąpił błąd podczas zapisywania zdjęcia.');
+    });
+});
+
+// Kopiuj do schowka
+document.getElementById('copyToClipboardBtn').addEventListener('click', function() {
+    const editorContainer = document.getElementById('editorContainer');
+    
+    domtoimage.toBlob(editorContainer, {
+        quality: 1,
+        bgcolor: '#fff',
+    })
+    .then(async function(blob) {
+        try {
+            const item = new ClipboardItem({ 'image/png': blob });
+            await navigator.clipboard.write([item]);
+            alert('Skopiowano do schowka! Możesz teraz wkleić obraz w dowolnym programie graficznym.');
+        } catch(err) {
+            console.error('Błąd kopiowania do schowka:', err);
+            alert('Nie udało się skopiować do schowka. Spróbuj użyć przycisku "Zapisz jako..."');
+        }
+    })
+    .catch(function(error) {
+        console.error('Błąd podczas tworzenia obrazu:', error);
+        alert('Wystąpił błąd podczas kopiowania do schowka.');
+    });
+});
+
+// Wczytywanie szablonu
+document.getElementById('loadTemplateBtn').addEventListener('click', function() {
+    const templateName = document.getElementById('templateSelect').value;
+    const template = localStorage.getItem('template_' + templateName);
+    if (template) {
+        applySettings(JSON.parse(template));
+    } else {
+        alert('Nie znaleziono szablonu');
+    }
+});
+
+// Zapisywanie szablonu
+document.getElementById('saveTemplateBtn').addEventListener('click', function() {
+    const newTemplateName = document.getElementById('newTemplateName').value.trim();
+    if (!newTemplateName) {
+        alert('Wprowadź nazwę szablonu');
+        return;
+    }
+
+    const settings = getCurrentSettings();
+    localStorage.setItem('template_' + newTemplateName, JSON.stringify(settings));
+
+    // Dodawanie nowej opcji do selecta
+    const select = document.getElementById('templateSelect');
+    let exists = false;
+    for (let i = 0; i < select.options.length; i++) {
+        if (select.options[i].text === newTemplateName) {
+            exists = true;
+            break;
+        }
+    }
+    if (!exists) {
+        const option = new Option(newTemplateName, newTemplateName);
+        select.add(option);
+    }
+    
+    document.getElementById('newTemplateName').value = '';
+    alert('Szablon został zapisany');
+});
+
+// Usuwanie szablonu
+document.getElementById('deleteTemplateBtn').addEventListener('click', function() {
+    const select = document.getElementById('templateSelect');
+    if (select.selectedIndex === -1) {
+        alert('Wybierz szablon do usunięcia');
+        return;
+    }
+    
+    const templateName = select.value;
+    if (confirm(`Czy na pewno chcesz usunąć szablon "${select.options[select.selectedIndex].text}"?`)) {
+        localStorage.removeItem('template_' + templateName);
+        select.remove(select.selectedIndex);
+        alert('Szablon został usunięty');
+    }
+});
+
+// Przy starcie strony
+window.addEventListener('DOMContentLoaded', function() {
+    // Załaduj zapisane szablony do selecta
+    loadSavedTemplates();
+    // Włącz cień domyślnie
+    const shadowToggle = document.getElementById('shadowToggle');
+    shadowToggle.checked = true;
+    shadow.style.display = 'block';
+    updateShadow();
+});
