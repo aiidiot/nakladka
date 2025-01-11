@@ -34,14 +34,7 @@ function updateMainImagePosition() {
     mainImage.style.transform = `translate(calc(-50% + ${mainImageOffset.x}px), calc(-50% + ${mainImageOffset.y}px)) scale(${mainImageScale})`;
 }
 
-// Funkcja aktualizacji wielkości nakładki
-function updateOverlaySize(value) {
-    if (!overlayContainer) return;
-    overlayContainer.style.width = value + 'px';
-    overlayContainer.style.height = value + 'px';
-    updateShadow();
-}
-// Ustawienie rozmiaru
+    // Ustawienie rozmiaru
     updateOverlaySize(settings.overlaySize);
     document.getElementById('overlaySize').value = settings.overlaySize;
     document.getElementById('overlaySizeInput').value = settings.overlaySize;
