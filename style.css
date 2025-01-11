@@ -59,15 +59,28 @@ body {
    padding: 8px 16px;  
    margin-right: 5px;  
    cursor: pointer;  
-   border: 1px solid #ddd;  
-   background: white;  
+   border: none;
+   background: #0078D4;  
+   color: white;  
    border-radius: 4px;  
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+   transition: all 0.2s ease;
 }  
   
 .btn.active {  
-   background: #007bff;  
-   color: white;  
+   background: #005A9E;
+   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }  
+
+.btn:hover {
+    background: #106EBE;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
   
 #editorContainer {  
    width: 1024px;  
@@ -83,8 +96,7 @@ body {
    height: 100%;  
    position: relative;  
    overflow: hidden;  
-   z-index: 1; /* Ustawienie z-index na wartość niższą niż #shadow */  
-
+   z-index: 1;
 }  
   
 #mainImage {  
@@ -105,19 +117,27 @@ body {
    border: 7px solid white;  
    cursor: move;  
    z-index: 10;  
-   overflow: hidden; 
-   z-index: 10;  
-   
+   overflow: hidden;   
 }  
   
 .circle {  
    border-radius: 50%;  
 }  
+
+#overlayContainer.sklejka {
+    width: 50% !important;
+    height: 100% !important;
+    top: 0 !important;
+    right: 0 !important;
+    left: auto !important;
+    border-radius: 0 !important;
+}
   
 #overlayImage {  
    width: 100%;  
    height: 100%;  
    object-fit: cover;  
+   transform-origin: center center;
 }  
   
 .nav-arrows {  
@@ -196,32 +216,10 @@ input[type="number"] {
    background: rgba(0, 0, 0, 0.7);  
    border-radius: 50%;  
    display: none;  
-   z-index: 5; /* Ustawienie z-index na wartość wyższą niż #mainImageContainer */  
+   z-index: 5;
    transform: translate(3px, 3px);  
 }  
-.btn {
-    padding: 8px 16px;
-    margin-right: 5px;
-    cursor: pointer;
-    border: none;
-    background: #0078D4;  /* kolor niebieski Microsoft */
-    color: white;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: all 0.2s ease;
-}
 
-.btn:hover {
-    background: #106EBE;  /* ciemniejszy niebieski przy hover */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.btn.active {
-    background: #005A9E;  /* jeszcze ciemniejszy niebieski dla aktywnego */
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.btn:active {
-    transform: translateY(1px);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+#shadow.sklejka {
+    border-radius: 0 !important;
 }
