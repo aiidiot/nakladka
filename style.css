@@ -223,3 +223,10 @@ input[type="number"] {
 #shadow.sklejka {
     border-radius: 0 !important;
 }
+#overlayContainer {
+    transform-origin: center center;
+}
+
+#overlayImage {
+    transform-origin: center center;
+}
