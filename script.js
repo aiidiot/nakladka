@@ -429,6 +429,7 @@ document.getElementById('rotationAngle').addEventListener('input', function(e) {
     overlayRotation = parseInt(e.target.value);
     document.getElementById('rotationAngleInput').value = overlayRotation;
     overlayContainer.style.transform = `rotate(${overlayRotation}deg) scale(${overlayImageScale})`;
+    shadow.style.transform = `rotate(${overlayRotation}deg)`;
     updateShadow();
 });
 
@@ -436,8 +437,10 @@ document.getElementById('rotationAngleInput').addEventListener('input', function
     overlayRotation = parseInt(e.target.value);
     document.getElementById('rotationAngle').value = overlayRotation;
     overlayContainer.style.transform = `rotate(${overlayRotation}deg) scale(${overlayImageScale})`;
+    shadow.style.transform = `rotate(${overlayRotation}deg)`;
     updateShadow();
 });
+
 
 
 document.getElementById('rotationAngleInput').addEventListener('input', function(e) {
