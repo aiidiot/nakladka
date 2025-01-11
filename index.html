@@ -11,7 +11,8 @@
    <div class="controls">  
       <div class="control-group">  
         <button class="btn active" data-shape="circle">Koło</button>  
-        <button class="btn" data-shape="square">Kwadrat</button>  
+        <button class="btn" data-shape="square">Kwadrat</button>
+        <button class="btn" data-shape="sklejka">Sklejka</button>  
       </div>  
   
       <div class="control-group">  
@@ -30,6 +31,12 @@
         <input type="range" id="borderWidth" min="1" max="50" value="6">  
         <input type="number" id="borderWidthInput" value="7" min="1" max="20"> px  
       </div>  
+
+      <div class="control-group">  
+        <label>Obrót nakładki:</label>  
+        <input type="range" id="rotationAngle" min="0" max="360" value="0">  
+        <input type="number" id="rotationAngleInput" value="0" min="0" max="360"> stopni  
+      </div>  
   
       <div class="control-group">  
         <label>Wielkość nakładki:</label>  
@@ -45,9 +52,7 @@
       </div>  
    </div>  
   
-   
-   </div>  
- <div class="control-group">  
+   <div class="control-group">  
       <label>Zdjęcie główne (wskaż z dysku):</label>  
       <input type="file" id="mainImageInput" accept="image/*">  
       <button id="autoFitBtn" class="btn">Autodopasowanie zdjęcia</button>  
@@ -102,35 +107,31 @@
       </div>  
    </div>  
   
-  
-  
    <div class="save-options">  
       <button id="saveAsBtn" class="btn">Zapisz (plik się pobierze)...</button>  
       <button id="copyToClipboardBtn" class="btn">Skopiuj do schowka</button>
    </div>  
 
    <div style="text-align: right; font-size: 12px; color: #666; margin-top: 12px; font-family: Arial, sans-serif;">
-    SklejkaMaker by Robert VER 1.6 MacOS Compatible
+    SklejkaMaker by Robert VER 1.9
     <br>
     <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Faiidiot.github.io%2Fnakladka&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=visits&edge_flat=false"/>
-</div>
+   </div>
    
-<div class="control-group">
-    <label>Szablony:</label>
-    <select id="templateSelect" style="padding: 5px; min-width: 200px;">
-        <option value="default">Możesz wskazać zapisany przez siebie szablon</option>
-    </select>
-    <button id="loadTemplateBtn" class="btn">Wczytaj</button>
-    <button id="deleteTemplateBtn" class="btn">Usuń wybrany szablon</button>
-</div>
+   <div class="control-group">
+      <label>Szablony:</label>
+      <select id="templateSelect" style="padding: 5px; min-width: 200px;">
+          <option value="default">Możesz wskazać zapisany przez siebie szablon</option>
+      </select>
+      <button id="loadTemplateBtn" class="btn">Wczytaj</button>
+      <button id="deleteTemplateBtn" class="btn">Usuń wybrany szablon</button>
+   </div>
 
-<div class="control-group">
-    <label>Nazwa nowego szablonu:</label>
-    <input type="text" id="newTemplateName" placeholder="Wpisz nazwę szablonu" style="padding: 5px; min-width: 200px;">
-    <button id="saveTemplateBtn" class="btn">Zapisz bieżącą wielkość, pozycję i kolor nakładki jako szablon</button>
-</div>
-   
-   
+   <div class="control-group">
+      <label>Nazwa nowego szablonu:</label>
+      <input type="text" id="newTemplateName" placeholder="Wpisz nazwę szablonu" style="padding: 5px; min-width: 200px;">
+      <button id="saveTemplateBtn" class="btn">Zapisz bieżącą wielkość, pozycję i kolor nakładki jako szablon</button>
+   </div>
    
    <script src="script.js"></script>  
 </body>  
