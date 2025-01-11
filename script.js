@@ -107,24 +107,27 @@ if (overlayContainer) {
     });
 }
 
-// Obsługa skalowania
-const mainImageScaleInput = document.getElementById('mainImageScale');
-const overlayImageScaleInput = document.getElementById('overlayImageScale');
-if (mainImageScaleInput) {
-    mainImageScaleInput.addEventListener('input', function(e) {
-        mainImageScale = e.target.value / 100;
-        this.nextElementSibling.textContent = e.target.value + '%';
-        updateMainImagePosition();
-    });
-}
-
-if (overlayImageScaleInput) {
-    overlayImageScaleInput.addEventListener('input', function(e) {
-        overlayImageScale = e.target.value / 100;
-        this.nextElementSibling.textContent = e.target.value + '%';
-        overlayImage.style.transform = `scale(${overlayImageScale})`;
-    });
-}
+// Obsługa skalowania  
+document.getElementById('mainImageScale').addEventListener('input', function(e) {  
+   mainImageScale = e.target.value / 100;  
+   this.nextElementSibling.textContent = e.target.value + '%';  
+   updateMainImagePosition();  
+});  
+  
+document.getElementById('overlayImageScale').addEventListener('input', function(e) {  
+   overlayImageScale = e.target.value / 100;  
+   this.nextElementSibling.textContent = e.target.value + '%';  
+   overlayImage.style.transform = `scale(${overlayImageScale})`;  
+});  
+  
+// Obsługa wielkości nakładki  
+function updateOverlaySize(value) {  
+   document.getElementById('overlaySize').value = value;  
+   document.getElementById('overlaySizeInput').value = value;  
+   overlayContainer.style.width = value + 'px';  
+   overlayContainer.style.height = value + 'px';  
+   updateShadow();  
+}  
 
 // Obsługa zdjęć
 document.getElementById('mainImageInput').addEventListener('change', function(e) {
