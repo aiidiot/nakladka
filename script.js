@@ -71,6 +71,21 @@ if (rotationAngle && rotationAngleInput) {
         updateShadow();
     });
 }
+// Obsługa grubości ramki  
+document.getElementById('borderWidth').addEventListener('input', function(e) {  
+   const value = e.target.value;  
+   overlayContainer.style.border = `${value}px solid ${document.getElementById('borderColor').value}`;  
+   updateShadow();  
+}); 
+
+// Obsługa wielkości nakładki  
+function updateOverlaySize(value) {  
+   document.getElementById('overlaySize').value = value;  
+   document.getElementById('overlaySizeInput').value = value;  
+   overlayContainer.style.width = value + 'px';  
+   overlayContainer.style.height = value + 'px';  
+   updateShadow();  
+}  
 
 // Obsługa przeciągania nakładki
 if (overlayContainer) {
