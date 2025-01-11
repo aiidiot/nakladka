@@ -41,6 +41,18 @@ function updateOverlaySize(value) {
     overlayContainer.style.height = value + 'px';
     updateShadow();
 }
+// Ustawienie rozmiaru
+    updateOverlaySize(settings.overlaySize);
+    document.getElementById('overlaySize').value = settings.overlaySize;
+    document.getElementById('overlaySizeInput').value = settings.overlaySize;
+	
+
+    // Ustawienie grubości ramki
+    const borderWidth = document.getElementById('borderWidth');
+    if (borderWidth) {
+        borderWidth.value = settings.borderWidth;
+        overlayContainer.style.borderWidth = settings.borderWidth + 'px';
+    }
 
 // Obsługa przycisków kolorów
 document.querySelectorAll('.color-btn').forEach(btn => {
@@ -70,22 +82,7 @@ if (rotationAngle && rotationAngleInput) {
         overlayContainer.style.transform = `rotate(${overlayRotation}deg)`;
         updateShadow();
     });
-}
-// Obsługa grubości ramki  
-document.getElementById('borderWidth').addEventListener('input', function(e) {  
-   const value = e.target.value;  
-   overlayContainer.style.border = `${value}px solid ${document.getElementById('borderColor').value}`;  
-   updateShadow();  
-}); 
 
-// Obsługa wielkości nakładki  
-function updateOverlaySize(value) {  
-   document.getElementById('overlaySize').value = value;  
-   document.getElementById('overlaySizeInput').value = value;  
-   overlayContainer.style.width = value + 'px';  
-   overlayContainer.style.height = value + 'px';  
-   updateShadow();  
-}  
 
 // Obsługa przeciągania nakładki
 if (overlayContainer) {
