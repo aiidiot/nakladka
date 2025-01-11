@@ -232,7 +232,7 @@ function applySettings(settings) {
     // Ustawienie rozmiaru
     updateOverlaySize(settings.overlaySize);
     document.getElementById('overlaySize').value = settings.overlaySize;
-        document.getElementById('overlaySizeInput').value = settings.overlaySize;
+    document.getElementById('overlaySizeInput').value = settings.overlaySize;
 
     // Ustawienie grubości ramki
     const borderWidth = document.getElementById('borderWidth');
