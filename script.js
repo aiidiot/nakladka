@@ -213,7 +213,8 @@ function getCurrentSettings() {
     };
 }
 
-function applySettings(settings) {
+
+
     // Ustawienie kształtu
     if (settings.shape === 'circle') {
         overlayContainer.classList.add('circle');
