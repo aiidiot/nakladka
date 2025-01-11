@@ -188,7 +188,15 @@ document.querySelectorAll('[data-shape]').forEach(btn => {
         overlayContainer.classList.add('square');  
         overlayContainer.classList.remove('circle');  
         shadow.style.borderRadius = '0';  
-      }  
+      } else if (shape === 'sklejka') {
+        overlayContainer.classList.add('sklejka');
+        overlayContainer.style.width = '50%';
+        overlayContainer.style.height = '100%';
+        overlayContainer.style.left = '0';
+        overlayContainer.style.top = '0';
+        overlayContainer.style.transform = `rotate(${overlayRotation}deg)`;
+      }
+      updateShadow();
    });  
 });  
   
@@ -196,7 +204,7 @@ document.querySelectorAll('[data-shape]').forEach(btn => {
 document.getElementById('autoFitBtn').addEventListener('click', function() {  
    mainImageOffset = { x: 0, y: 0 };  
    mainImageScale = 1;  
-   document.getElementById('mainImageScale').value = 100;  
+     document.getElementById('mainImageScale').value = 100;  
    mainImage.style.width = '100%';  
    mainImage.style.height = '100%';  
    mainImage.style.objectFit = 'contain';  
@@ -208,7 +216,7 @@ document.getElementById('mainImageInput').addEventListener('change', function(e)
    const file = e.target.files[0];  
    if (file) {  
       const reader = new FileReader();  
-         reader.onload = function(e) {  
+      reader.onload = function(e) {  
         mainImage.src = e.target.result;  
         mainImage.style.display = 'block';  
         // Automatyczne dopasowanie po załadowaniu
@@ -432,41 +440,3 @@ document.getElementById('rotationAngleInput').addEventListener('input', function
 });
 
 // Obsługa funkcji "sklejka"
-document.querySelectorAll('[data-shape]').forEach(btn => {
-    btn.addEventListener('click', function() {
-        // Usuń active ze wszystkich przycisków
-        document.querySelectorAll('[data-shape]').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-
-        const shape = this.dataset.shape;
-        overlayContainer.classList.remove('circle', 'square', 'sklejka');
-        shadow.style.borderRadius = '0';
-
-        if (shape === 'circle') {
-            overlayContainer.classList.add('circle');
-            shadow.style.borderRadius = '50%';
-        } else if[_{{{CITATION{{{_1{](https://github.com/ganezasan/oppia/tree/51eb1f1858162ccc3a4459b52788f93b66145746/extensions%2Fobjects%2Ftemplates%2FFilepathEditor.js)
-                                              } else if (shape === 'sklejka') {
-            overlayContainer.classList.add('sklejka');
-            overlayContainer.style.width = '50%';
-            overlayContainer.style.height = '100%';
-            overlayContainer.style.left = '0';
-            overlayContainer.style.top = '0';
-            overlayContainer.style.transform = `rotate(${overlayRotation}deg)`;
-        } else {
-            overlayContainer.classList.add('square');
-        }
-        updateShadow();
-    });
-});
-
-// Przy starcie strony
-window.addEventListener('DOMContentLoaded', function() {
-    // Załaduj zapisane szablony do selecta
-    loadSavedTemplates();
-    // Włącz cień domyślnie
-    const shadowToggle = document.getElementById('shadowToggle');
-    shadowToggle.checked = true;
-    shadow.style.display = 'block';
-    updateShadow();
-});
