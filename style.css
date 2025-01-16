@@ -119,6 +119,34 @@ body {
    z-index: 10;  
    overflow: hidden;   
 }  
+
+#overlayContainer.skos {
+    border-radius: 0;
+    width: 50% !important;
+    height: 100% !important;
+    top: 0 !important;
+    left: 0 !important;
+    transform: skew(-10deg) !important;
+    transform-origin: top left;
+}
+
+#shadow.skos {
+    transform: skew(-10deg) !important;
+    transform-origin: top left;
+}
+
+#overlayContainer.skos img {
+    transform-origin: center center;
+}
+
+#shadow.skos {
+    transform: skew(-10deg) !important;
+    transform-origin: top left;
+}
+
+#overlayContainer.skos img {
+    transform: skew(10deg);  /* przeciwny kąt do kontenera */
+}
   
 .circle {  
    border-radius: 50%;  
