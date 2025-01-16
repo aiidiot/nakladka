@@ -169,6 +169,18 @@ function updateShadow() {
    shadow.style.top = (overlay.offsetTop - borderWidth) + 'px';
    shadow.style.backgroundColor = 'rgba(0, 0, 0, 0.66)';
    shadow.style.filter = 'blur(10px)';
+   
+   if (overlayContainer.classList.contains('sklejka')) {
+       shadow.classList.add('sklejka');
+       shadow.classList.remove('skos');
+   } else if (overlayContainer.classList.contains('skos')) {
+       shadow.classList.add('skos');
+       shadow.classList.remove('sklejka');
+       shadow.style.transform = 'skew(-10deg)';  // Ten sam kąt co nakładka
+       shadow.style.transformOrigin = 'top left';
+   } else {
+       shadow.classList.remove('sklejka', 'skos');
+   }
 }  
   
 // Obsługa kształtu nakładki  
@@ -180,14 +192,17 @@ document.querySelectorAll('[data-shape]').forEach(btn => {
       this.classList.add('active');
       
       const shape = this.dataset.shape;  
+      // Najpierw usuń wszystkie klasy kształtów
+      overlayContainer.classList.remove('circle', 'square', 'sklejka', 'skos');
+      
       if (shape === 'circle') {  
         overlayContainer.classList.add('circle');  
-        overlayContainer.classList.remove('square');  
-        shadow.style.borderRadius = '50%';  
+        shadow.style.borderRadius = '50%';
+        overlayContainer.style.transform = `rotate(${overlayRotation}deg)`;
       } else if (shape === 'square') {  
         overlayContainer.classList.add('square');  
-        overlayContainer.classList.remove('circle');  
-        shadow.style.borderRadius = '0';  
+        shadow.style.borderRadius = '0';
+        overlayContainer.style.transform = `rotate(${overlayRotation}deg)`;
       } else if (shape === 'sklejka') {
         overlayContainer.classList.add('sklejka');
         overlayContainer.style.width = '50%';
@@ -195,10 +210,19 @@ document.querySelectorAll('[data-shape]').forEach(btn => {
         overlayContainer.style.left = '0';
         overlayContainer.style.top = '0';
         overlayContainer.style.transform = `rotate(${overlayRotation}deg)`;
+      } else if (shape === 'skos') {
+        overlayContainer.classList.add('skos');
+        shadow.style.borderRadius = '0';
+        overlayContainer.style.width = '50%';
+        overlayContainer.style.height = '100%';
+        overlayContainer.style.top = '0';
+        overlayContainer.style.left = '0';
+        overlayContainer.style.transform = 'skew(-10deg)';
+        overlayImage.style.transform = 'skew(10deg)'; // przeciwny kąt dla zdjęcia
       }
       updateShadow();
    });  
-});  
+}); 
   
 // Autodopasowanie zdjęcia  
 document.getElementById('autoFitBtn').addEventListener('click', function() {  
