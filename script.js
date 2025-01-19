@@ -237,15 +237,19 @@ document.getElementById('autoFitBtn').addEventListener('click', function() {
    updateMainImagePosition();  
 });  
   
-// Wczytywanie zdjęć  
 document.getElementById('mainImageInput').addEventListener('change', function(e) {  
    const file = e.target.files[0];  
    if (file) {  
+      // Sprawdź i wymusz odpowiedni typ MIME
+      const imageType = file.type || 'image/jpeg';  // Domyślny typ jeśli nie jest określony
+      
       const reader = new FileReader();  
       reader.onload = function(e) {  
         mainImage.src = e.target.result;  
         mainImage.style.display = 'block';  
-        // Automatyczne dopasowanie po załadowaniu
+        // Dodajemy atrybut type
+        mainImage.setAttribute('type', imageType);
+        
         mainImage.onload = function() {
             mainImageOffset = { x: 0, y: 0 };  
             mainImageScale = 1;  
@@ -258,7 +262,7 @@ document.getElementById('mainImageInput').addEventListener('change', function(e)
       };  
       reader.readAsDataURL(file);  
    }  
-});  
+});
   
 document.getElementById('overlayImageInput').addEventListener('change', function(e) {  
    const file = e.target.files[0];  
