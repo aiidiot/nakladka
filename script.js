@@ -211,15 +211,15 @@ document.querySelectorAll('[data-shape]').forEach(btn => {
         overlayContainer.style.top = '0';
         overlayContainer.style.transform = `rotate(${overlayRotation}deg)`;
       } else if (shape === 'skos') {
-        overlayContainer.classList.add('skos');
-        shadow.style.borderRadius = '0';
-        overlayContainer.style.width = '50%';
-        overlayContainer.style.height = '100%';
-        overlayContainer.style.top = '0';
-        overlayContainer.style.left = '0';
-        overlayContainer.style.transform = 'skew(-10deg)';
-        overlayImage.style.transform = 'skew(10deg)'; // przeciwny kąt dla zdjęcia
-      }
+    overlayContainer.classList.add('skos');
+    shadow.style.borderRadius = '0';
+    overlayContainer.style.width = '50%';
+    overlayContainer.style.height = '100%';
+    overlayContainer.style.top = '0';
+    overlayContainer.style.left = '0';
+    // Usuwamy transform ze zdjęcia:
+    overlayImage.style.transform = 'none';  // Reset transformacji zdjęcia
+}
       updateShadow();
    });  
 }); 
