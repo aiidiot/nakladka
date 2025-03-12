@@ -6,10 +6,35 @@
    <title>SklejkaMaker</title>  
    <link rel="stylesheet" href="style.css">  
    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>  
+
+	
 </head>  
 <body>  
-	<a href="https://aiidiot.github.io/nakladka2/index.html" style="color: darkblue; font-weight: bold; text-decoration: underline dotted red;">SklejkaMaker2.0 - >>>>> możesz przejść na nowszą wersję >>>>  </a>
-
+  <!-- Kod przekierowania -->
+    <meta http-equiv="refresh" content="3; url=https://aiidiot.github.io/nakladka2/index.html" />
+    
+    <!-- Opcjonalny styl dla komunikatu o przekierowaniu -->
+    <style>
+        .redirect-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #ffcc00;
+            color: #333;
+            text-align: center;
+            padding: 10px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            z-index: 9999;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .redirect-banner a {
+            color: #0066cc;
+            text-decoration: underline;
+        }
+    </style>
    <div class="controls">  
       <div class="control-group">  
         <button class="btn active" data-shape="circle">Koło</button>  
@@ -18,6 +43,12 @@
 		<button class="btn" data-shape="skos">Sklejka Skos</button>
 
       </div>  
+	    <!-- Zaraz po otwarciu body dodaj pasek informacyjny -->
+    <div class="redirect-banner">
+        Za 3 sekundy nastąpi przekierowanie do nowej wersji. 
+        Jeśli nie zostaniesz przekierowany automatycznie, <a href="https://twojaNowaDomena.github.io/projekt-v2/">kliknij tutaj</a>.
+    </div>
+    
   
       <div class="control-group">  
         <label>Kolor ramki:</label>  
